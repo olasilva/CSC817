@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Oren | Prestige Inventory</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F9F7F2;
+            color: #1A1A1A;
+            overflow-x: hidden;
+        }
+
+        /* GOLD & WHITE LUXURY THEME */
+        :root {
+            --gold-primary: #B58B3C;
+            --gold-dark: #9A7532;
+            --gold-light: #D4AF6A;
+            --gold-glow: rgba(181, 139, 60, 0.12);
+            --pure-white: #FFFFFF;
+            --off-white: #FEFCF8;
+            --card-white: #FFFFFF;
+            --border-light: #F0EBE1;
+            --text-dark: #1F2937;
+            --text-muted: #6B7280;
+            --shadow-sm: 0 12px 30px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+            --transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        /* SIDEBAR PREMIUM */
+        .sidebar {
+            width: 280px;
+            background: var(--pure-white);
+            border-right: 1px solid var(--border-light);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            z-index: 50;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .logo-area {
+            padding: 1.8rem 2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .logo-area h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-area p {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 2rem;
+            margin: 0.3rem 1rem;
+            border-radius: 14px;
+            font-weight: 500;
+            color: #4b5563;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 1.2rem;
+        }
+
+        .nav-item:hover {
+            background: var(--gold-glow);
+            color: var(--gold-primary);
+        }
+
+        .nav-item.active {
+            background: var(--gold-glow);
+            color: var(--gold-primary);
+            font-weight: 700;
+            border-left: 3px solid var(--gold-primary);
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem 2.5rem;
+            min-height: 100vh;
+            background: var(--off-white);
+        }
+
+        /* FILTER & CARD COMPONENTS */
+        .filter-card {
+            background: var(--pure-white);
+            border-radius: 28px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+        }
+
+        .form-input, .form-select {
+            background: var(--pure-white);
+            border: 1px solid var(--border-light);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: 0.2s;
+            color: #1f2937;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 3px rgba(181, 139, 60, 0.15);
+        }
+
+        .btn-gold-primary {
+            background: var(--gold-primary);
+            border: none;
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(181, 139, 60, 0.2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-gold-primary:hover {
+            background: var(--gold-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-gold {
+            background: transparent;
+            border: 1px solid var(--gold-light);
+            color: var(--gold-dark);
+            border-radius: 40px;
+            padding: 0.5rem 1.3rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-outline-gold:hover {
+            background: var(--gold-glow);
+            border-color: var(--gold-primary);
+        }
+
+        .sort-btn {
+            background: #F3F0EA;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #4b5563;
+        }
+
+        .sort-btn.active {
+            background: var(--gold-primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(181,139,60,0.3);
+        }
+
+        /* INVENTORY CARD (horizontal premium) */
+        .inventory-card {
+            background: var(--pure-white);
+            border-radius: 24px;
+            padding: 1.2rem 1.8rem;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 0.9fr 0.9fr 0.9fr 1fr 0.8fr auto;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        .inventory-card:hover {
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .card-label-sm {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .card-value {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.85rem;
+            border-radius: 100px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: fit-content;
+        }
+        .status-in-stock { background: #E9F7EF; color: #2B6E3C; border-left: 3px solid #2B6E3C; }
+        .status-low { background: #FFF3E0; color: #B76E0E; border-left: 3px solid #B76E0E; }
+        .status-out { background: #FDECEA; color: #B33A34; border-left: 3px solid #B33A34; }
+
+        .action-icons i {
+            font-size: 1.2rem;
+            margin: 0 6px;
+            cursor: pointer;
+            color: #8a7b6b;
+            transition: 0.2s;
+        }
+        .action-icons i:hover { color: var(--gold-primary); transform: scale(1.05); }
+
+        /* MODAL PREMIUM */
+        .modal-premium {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-premium.active { display: flex; }
+        .modal-card {
+            background: white;
+            max-width: 550px;
+            width: 90%;
+            border-radius: 32px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            border-top: 5px solid var(--gold-primary);
+        }
+        .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-control-custom {
+            width: 100%;
+            padding: 0.85rem 1.2rem;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+        }
+
+        .notification-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            border-left: 5px solid var(--gold-primary);
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            font-weight: 600;
+            z-index: 1100;
+            animation: slideUp 0.2s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 28px;
+            color: #8b7a66;
+        }
+        @media (max-width: 1100px) {
+            .sidebar { width: 100px; }
+            .sidebar .logo-area p, .sidebar .nav-item span:last-child { display: none; }
+            .main-content { margin-left: 100px; }
+            .nav-item { justify-content: center; padding: 0.85rem 0; }
+        }
+        @media (max-width: 900px) {
+            .inventory-card { grid-template-columns: 1fr; gap: 0.6rem; padding: 1.2rem; }
+            .action-icons { text-align: right; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo-area">
+        <h1><i class="fas fa-crown" style="font-size: 1.3rem;"></i> OREN</h1>
+        <p>PRESTIGE INVENTORY</p>
+    </div>
+    <div style="margin-top: 2rem;">
+        <div class="nav-item active" data-page="inventory">
+            <i class="fas fa-boxes"></i> <span>Inventory Vault</span>
+        </div>
+        <div class="nav-item" data-page="dashboard">
+            <i class="fas fa-chart-pie"></i> <span>Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="analytics">
+            <i class="fas fa-chart-line"></i> <span>Analytics</span>
+        </div>
+        <div class="nav-item" data-page="suppliers">
+            <i class="fas fa-truck"></i> <span>Suppliers</span>
+        </div>
+        <div class="nav-item" data-page="settings">
+            <i class="fas fa-sliders-h"></i> <span>Settings</span>
+        </div>
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i> <span>Exit</span>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <!-- Inventory View (main) -->
+    <div id="inventoryView">
+        <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+            <div>
+                <h2 class="text-3xl font-bold tracking-tight" style="color:#1F2937;">Inventory Vault</h2>
+                <p class="text-gray-500 mt-1">Manage high-value items with precision</p>
+            </div>
+            <button class="btn-gold-primary" id="openAddModalBtn"><i class="fas fa-plus mr-2"></i>Add Item</button>
+        </div>
+
+        <!-- Filter Section Gold Premium -->
+        <div class="filter-card">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
+                <div><label class="text-xs uppercase font-semibold text-gray-400">Search</label><input type="text" id="searchInput" class="form-input mt-1" placeholder="Name / ID..."></div>
+                <div><label class="text-xs uppercase font-semibold text-gray-400">Category</label><select id="categoryFilter" class="form-select mt-1"><option value="">All</option><option>Electronics</option><option>Storage</option><option>Power Systems</option><option>AI Components</option><option>Sensors</option><option>Displays</option><option>Materials</option><option>Robotics</option><option>Networking</option><option>Quantum Parts</option></select></div>
+                <div><label class="text-xs uppercase font-semibold text-gray-400">Status</label><select id="statusFilter" class="form-select mt-1"><option value="">All Status</option><option value="in-stock">In Stock</option><option value="low">Low Stock</option><option value="out">Out of Stock</option></select></div>
+                <div><label class="text-xs uppercase font-semibold text-gray-400">Max Price ($)</label><input type="number" id="priceFilter" class="form-input mt-1" placeholder="Unlimited"></div>
+            </div>
+            <div class="flex justify-between flex-wrap gap-3 items-center">
+                <div class="flex gap-2 flex-wrap">
+                    <button class="sort-btn" data-sort="name">Name A-Z</button>
+                    <button class="sort-btn" data-sort="stock">Stock Level</button>
+                    <button class="sort-btn" data-sort="price">Price (low-high)</button>
+                    <button class="sort-btn" data-sort="date">Recently Added</button>
+                </div>
+                <button class="btn-outline-gold" id="resetFiltersBtn"><i class="fas fa-undo-alt mr-1"></i>Reset filters</button>
+            </div>
+        </div>
+
+        <!-- Inventory Cards Container -->
+        <div id="productsContainer" class="cards-grid"></div>
+    </div>
+
+    <!-- Dashboard quick preview (optional minimal) -->
+    <div id="dashboardView" style="display:none;">
+        <div class="premium-table-container p-6 bg-white rounded-3xl shadow-sm">
+            <h3 class="text-xl font-bold mb-3">Coming Soon — Prestige Metrics</h3>
+            <p class="text-gray-500">Advanced KPI dashboard integrated with gold theme.</p>
+        </div>
+    </div>
+    <div id="analyticsView" style="display:none;"><div class="bg-white p-10 rounded-3xl text-center">Analytics module launching with golden insights.</div></div>
+</div>
+
+<!-- MODAL: Add / Edit Product -->
+<div id="productModal" class="modal-premium">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2 class="text-xl font-bold" id="modalTitle">Add Product</h2>
+            <i class="fas fa-times cursor-pointer text-gray-400 text-xl hover:text-gold" id="closeModalBtn"></i>
+        </div>
+        <form id="productFormModal" class="p-6">
+            <div class="form-group">
+                <label class="block text-sm font-semibold mb-1">Product ID *</label>
+                <input type="text" id="productId" class="form-control-custom w-full" readonly style="background:#F5F2EC;">
+            </div>
+            <div class="form-group">
+                <label class="block text-sm font-semibold mb-1">Product Name *</label>
+                <input type="text" id="productName" class="form-control-custom w-full" required>
+            </div>
+            <div class="form-group">
+                <label class="block text-sm font-semibold mb-1">Category *</label>
+                <select id="productCategory" class="form-control-custom w-full" required>
+                    <option>Electronics</option><option>Storage</option><option>Power Systems</option><option>AI Components</option>
+                    <option>Sensors</option><option>Displays</option><option>Materials</option><option>Robotics</option><option>Networking</option><option>Quantum Parts</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="form-group"><label>Stock Quantity</label><input type="number" id="productStock" class="form-control-custom" min="0" required></div>
+                <div class="form-group"><label>Price ($)</label><input type="number" step="0.01" id="productPrice" class="form-control-custom" required></div>
+            </div>
+            <div class="form-group"><label>Minimum Stock Alert</label><input type="number" id="productMinStock" class="form-control-custom" value="45"></div>
+            <div class="flex gap-3 mt-5"><button type="button" id="cancelModalBtn" class="btn-outline-gold flex-1">Cancel</button><button type="submit" class="btn-gold-primary flex-1">Save Item</button></div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ---------- AUTH CHECK ----------
+    if (!localStorage.getItem('stockflow_auth')) {
+        window.location.href = 'auth.html';
+    }
+
+    const STORAGE_KEY = 'stockflow_products';
+    let allProducts = [];
+    let currentEditId = null;
+    let currentSort = 'name';
+
+    // ---------- INITIAL DATA (premium demo + fallback) ----------
+    function initData() {
+        let stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored || JSON.parse(stored).length === 0) {
+            const categories = ['Electronics','Storage','Power Systems','AI Components','Sensors','Displays','Materials','Robotics','Networking','Quantum Parts'];
+            let demo = [];
+            for(let i=0; i<28; i++) {
+                let cat = categories[i % categories.length];
+                let stock = Math.floor(Math.random() * 280);
+                let price = (Math.random() * 1250 + 75).toFixed(2);
+                demo.push({
+                    id: `OREN-${(i+101).toString()}`,
+                    name: `${cat} ${['Gold Edition','Platinum','Elite Vault','Prestige','Legacy'][i%5]} ${Math.floor(Math.random()*99)}`,
+                    category: cat,
+                    stock: stock,
+                    price: parseFloat(price),
+                    minStock: 40,
+                    createdAt: new Date(Date.now() - i * 86400000).toISOString()
+                });
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
+        }
+        allProducts = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        renderInventoryFull();
+    }
+
+    function saveToLocal() { localStorage.setItem(STORAGE_KEY, JSON.stringify(allProducts)); }
+
+    function showToast(msg, isError = false) {
+        let toast = document.createElement('div');
+        toast.className = 'notification-toast';
+        toast.innerHTML = `<i class="fas ${isError ? 'fa-exclamation-triangle' : 'fa-check-circle'} mr-2" style="color:${isError ? '#B33A34' : 'var(--gold-primary)'}"></i>${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2700);
+    }
+
+    function getStatus(stock, min=45) {
+        if(stock > min) return 'in-stock';
+        if(stock > 0) return 'low';
+        return 'out';
+    }
+    function getStatusText(st) {
+        if(st === 'in-stock') return 'In Stock';
+        if(st === 'low') return 'Low Stock';
+        return 'Out of Stock';
+    }
+
+    // FILTER + SORT + RENDER engine
+    function renderInventoryFull() {
+        let searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+        let categoryVal = document.getElementById('categoryFilter')?.value || '';
+        let statusVal = document.getElementById('statusFilter')?.value || '';
+        let maxPrice = parseFloat(document.getElementById('priceFilter')?.value) || Infinity;
+
+        let filtered = allProducts.filter(p => {
+            let matchesSearch = p.name.toLowerCase().includes(searchTerm) || p.id.toLowerCase().includes(searchTerm);
+            let matchesCat = !categoryVal || p.category === categoryVal;
+            let stat = getStatus(p.stock, p.minStock || 45);
+            let matchesStatus = !statusVal || stat === statusVal;
+            let matchesPrice = p.price <= maxPrice;
+            return matchesSearch && matchesCat && matchesStatus && matchesPrice;
+        });
+
+        // sorting
+        if(currentSort === 'name') filtered.sort((a,b) => a.name.localeCompare(b.name));
+        else if(currentSort === 'stock') filtered.sort((a,b) => b.stock - a.stock);
+        else if(currentSort === 'price') filtered.sort((a,b) => a.price - b.price);
+        else if(currentSort === 'date') filtered.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        const container = document.getElementById('productsContainer');
+        if(!container) return;
+
+        if(filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open fa-3x mb-3" style="color:#D4AF6A;"></i><h3 class="font-bold">No items match</h3><p class="text-sm">Adjust filters or add new product</p></div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(p => {
+            let status = getStatus(p.stock, p.minStock || 45);
+            return `
+                <div class="inventory-card">
+                    <div><div class="card-label-sm">ID</div><div class="card-value">${p.id}</div></div>
+                    <div><div class="card-label-sm">Product</div><div class="card-value font-semibold">${escapeHtml(p.name)}</div></div>
+                    <div><div class="card-label-sm">Category</div><div class="card-value">${p.category}</div></div>
+                    <div><div class="card-label-sm">Stock</div><div class="card-value">${p.stock} units</div></div>
+                    <div><div class="card-label-sm">Price</div><div class="card-value">$${p.price.toFixed(2)}</div></div>
+                    <div><div class="card-label-sm">Status</div><span class="status-badge status-${status}"><i class="fas ${status==='in-stock'?'fa-check-circle':status==='low'?'fa-exclamation-triangle':'fa-stop-circle'}"></i>${getStatusText(status)}</span></div>
+                    <div><div class="card-label-sm">Min threshold</div><div class="card-value">${p.minStock || 45}</div></div>
+                    <div class="action-icons"><i class="fas fa-edit" onclick="editProductById('${p.id}')"></i> <i class="fas fa-trash-alt" onclick="deleteProductById('${p.id}')"></i></div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // CRUD methods
+    window.editProductById = (id) => {
+        let prod = allProducts.find(p => p.id === id);
+        if(prod) {
+            currentEditId = id;
+            document.getElementById('modalTitle').innerText = 'Edit Inventory Item';
+            document.getElementById('productId').value = prod.id;
+            document.getElementById('productName').value = prod.name;
+            document.getElementById('productCategory').value = prod.category;
+            document.getElementById('productStock').value = prod.stock;
+            document.getElementById('productPrice').value = prod.price;
+            document.getElementById('productMinStock').value = prod.minStock || 45;
+            document.getElementById('productModal').classList.add('active');
+        }
+    };
+    window.deleteProductById = (id) => {
+        if(confirm('Permanently delete this luxury asset?')) {
+            allProducts = allProducts.filter(p => p.id !== id);
+            saveToLocal();
+            renderInventoryFull();
+            showToast('Item removed from vault');
+        }
+    };
+
+    function openAddModal() {
+        currentEditId = null;
+        document.getElementById('modalTitle').innerText = 'Add New Asset';
+        let maxNum = 0;
+        allProducts.forEach(p => {
+            let parts = p.id.split('-');
+            if(parts.length>1 && !isNaN(parseInt(parts[1]))) maxNum = Math.max(maxNum, parseInt(parts[1]));
+        });
+        let newId = `OREN-${maxNum+1}`;
+        document.getElementById('productId').value = newId;
+        document.getElementById('productName').value = '';
+        document.getElementById('productCategory').value = 'Electronics';
+        document.getElementById('productStock').value = 0;
+        document.getElementById('productPrice').value = 0;
+        document.getElementById('productMinStock').value = 45;
+        document.getElementById('productModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('productModal').classList.remove('active');
+        currentEditId = null;
+    }
+
+    function saveProductHandler(e) {
+        e.preventDefault();
+        let id = document.getElementById('productId').value;
+        let name = document.getElementById('productName').value.trim();
+        let category = document.getElementById('productCategory').value;
+        let stock = parseInt(document.getElementById('productStock').value);
+        let price = parseFloat(document.getElementById('productPrice').value);
+        let minStock = parseInt(document.getElementById('productMinStock').value);
+        if(!name || !category || isNaN(stock) || isNaN(price)) { showToast('Fill all required fields', true); return; }
+
+        if(currentEditId) {
+            let idx = allProducts.findIndex(p => p.id === currentEditId);
+            if(idx !== -1) {
+                allProducts[idx] = { ...allProducts[idx], name, category, stock, price, minStock, updatedAt: new Date().toISOString() };
+                showToast('Product updated successfully');
+            }
+        } else {
+            if(allProducts.some(p => p.id === id)) { showToast('ID conflict', true); return; }
+            allProducts.push({ id, name, category, stock, price, minStock, createdAt: new Date().toISOString() });
+            showToast('New item added to vault');
+        }
+        saveToLocal();
+        renderInventoryFull();
+        closeModal();
+    }
+
+    function resetFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('statusFilter').value = '';
+        document.getElementById('priceFilter').value = '';
+        renderInventoryFull();
+        showToast('Filters cleared');
+    }
+
+    // Navigation & Sidebar
+    function setActiveView(viewId) {
+        document.getElementById('inventoryView').style.display = 'none';
+        document.getElementById('dashboardView').style.display = 'none';
+        document.getElementById('analyticsView').style.display = 'none';
+        if(viewId === 'inventory') document.getElementById('inventoryView').style.display = 'block';
+        else if(viewId === 'dashboard') document.getElementById('dashboardView').style.display = 'block';
+        else if(viewId === 'analytics') document.getElementById('analyticsView').style.display = 'block';
+        else if(viewId === 'suppliers') showToast('Gold supplier network coming soon');
+        else if(viewId === 'settings') showToast('Vault settings & access control in progress');
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        let activeNav = Array.from(document.querySelectorAll('.nav-item')).find(n => n.getAttribute('data-page') === viewId);
+        if(activeNav) activeNav.classList.add('active');
+    }
+
+    // Event binding
+    window.addEventListener('load', () => {
+        initData();
+        // Filter listeners
+        const searchInput = document.getElementById('searchInput');
+        const catFilter = document.getElementById('categoryFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const priceFilter = document.getElementById('priceFilter');
+        if(searchInput) searchInput.addEventListener('input', () => renderInventoryFull());
+        if(catFilter) catFilter.addEventListener('change', () => renderInventoryFull());
+        if(statusFilter) statusFilter.addEventListener('change', () => renderInventoryFull());
+        if(priceFilter) priceFilter.addEventListener('input', () => renderInventoryFull());
+
+        // Sorting buttons
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                let sortVal = btn.getAttribute('data-sort');
+                if(sortVal === 'name') currentSort = 'name';
+                else if(sortVal === 'stock') currentSort = 'stock';
+                else if(sortVal === 'price') currentSort = 'price';
+                else if(sortVal === 'date') currentSort = 'date';
+                renderInventoryFull();
+            });
+        });
+        document.getElementById('resetFiltersBtn')?.addEventListener('click', resetFilters);
+        document.getElementById('openAddModalBtn')?.addEventListener('click', openAddModal);
+        document.getElementById('closeModalBtn')?.addEventListener('click', closeModal);
+        document.getElementById('cancelModalBtn')?.addEventListener('click', closeModal);
+        document.getElementById('productFormModal')?.addEventListener('submit', saveProductHandler);
+        document.getElementById('logoutBtn')?.addEventListener('click', ()=>{ localStorage.removeItem('stockflow_auth'); window.location.href = 'auth.html'; });
+
+        // Sidebar nav events
+        document.querySelectorAll('.nav-item[data-page]').forEach(nav => {
+            nav.addEventListener('click', (e) => {
+                let page = nav.getAttribute('data-page');
+                setActiveView(page);
+            });
+        });
+        setActiveView('inventory');
+    });
+</script>
+</body>
+</html>

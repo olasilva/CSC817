@@ -1,0 +1,597 @@
+<!-- settings.html - Settings Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - StockFlow Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .sidebar {
+            background: #1e293b;
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #334155;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #0f172a;
+            color: #3b82f6;
+        }
+
+        .settings-section {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .setting-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .setting-description {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #334155;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            padding: 0;
+        }
+
+        .toggle-switch.active {
+            background: #3b82f6;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 3px;
+            left: 3px;
+            transition: left 0.3s;
+        }
+
+        .toggle-switch.active::after {
+            left: 33px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            max-width: 400px;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-danger {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+            background: #991b1b;
+        }
+
+        .info-box {
+            background: #0f172a;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-box-text {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: #064e3b;
+            color: #6ee7b7;
+            border: 1px solid #047857;
+        }
+
+        .notification.error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border: 1px solid #991b1b;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+
+        .danger-zone {
+            background: rgba(127, 29, 29, 0.1);
+            border: 1px solid #7f1d1d;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #0f172a;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-weight: 600;
+        }
+
+        .user-email {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-6 border-b border-gray-700">
+            <h1 class="text-2xl font-bold text-blue-500">StockFlow Pro</h1>
+            <p class="text-gray-400 text-sm mt-1">Enterprise Inventory</p>
+        </div>
+        
+        <nav class="mt-6">
+            <a class="nav-link" onclick="navigateTo('dashboard')">
+                <span>📊</span> Dashboard
+            </a>
+            <a class="nav-link" onclick="navigateTo('inventory')">
+                <span>📦</span> Inventory
+            </a>
+            <a class="nav-link" onclick="navigateTo('analytics')">
+                <span>📈</span> Analytics
+            </a>
+            <a class="nav-link" onclick="navigateTo('suppliers')">
+                <span>👥</span> Suppliers
+            </a>
+            <a class="nav-link active" onclick="navigateTo('settings')">
+                <span>⚙️</span> Settings
+            </a>
+            <a class="nav-link" onclick="logout()">
+                <span>🚪</span> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold mb-2">Settings</h2>
+            <p class="text-gray-400">Manage your account and application preferences</p>
+        </div>
+
+        <!-- User Settings -->
+        <div class="settings-section">
+            <div class="section-title">👤 Account Settings</div>
+            
+            <div class="user-info">
+                <div class="user-avatar">👨‍💼</div>
+                <div class="user-details">
+                    <span class="user-name" id="userName">Administrator</span>
+                    <span class="user-email" id="userEmail">admin@stockflow.com</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-input" id="fullName" value="Administrator">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" id="emailAddress" value="admin@stockflow.com" disabled>
+            </div>
+
+            <button class="btn-primary" onclick="updateAccountSettings()">Update Profile</button>
+        </div>
+
+        <!-- Preferences -->
+        <div class="settings-section">
+            <div class="section-title">🎨 Preferences</div>
+
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span class="setting-name">Dark Mode</span>
+                    <span class="setting-description">Use dark theme for the application</span>
+                </div>
+                <button class="toggle-switch active" onclick="toggleDarkMode(this)"></button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span class="setting-name">Email Notifications</span>
+                    <span class="setting-description">Receive alerts for low stock items</span>
+                </div>
+                <button class="toggle-switch active" onclick="toggleEmailNotifications(this)"></button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-label">
+                    <span class="setting-name">Auto-save</span>
+                    <span class="setting-description">Automatically save changes</span>
+                </div>
+                <button class="toggle-switch active" onclick="toggleAutoSave(this)"></button>
+            </div>
+
+            <div class="form-group" style="margin-top: 1.5rem;">
+                <label class="form-label">Stock Alert Threshold (%)</label>
+                <input type="number" class="form-input" id="alertThreshold" value="50" min="1" max="100">
+            </div>
+        </div>
+
+        <!-- System Information -->
+        <div class="settings-section">
+            <div class="section-title">ℹ️ System Information</div>
+
+            <div class="info-box">
+                <div class="info-box-title">Application Version</div>
+                <div class="info-box-text">StockFlow Pro v2.0.1</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">Database</div>
+                <div class="info-box-text">Local Storage (Browser)</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">Last Sync</div>
+                <div class="info-box-text" id="lastSync">Just now</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-box-title">Total Products</div>
+                <div class="info-box-text" id="totalProducts">0 products</div>
+            </div>
+
+            <button class="btn-primary" onclick="exportData()" style="margin-top: 1rem;">📥 Export All Data</button>
+        </div>
+
+        <!-- Data Management -->
+        <div class="settings-section">
+            <div class="section-title">💾 Data Management</div>
+
+            <div class="info-box">
+                <div class="info-box-title">Backup Your Data</div>
+                <div class="info-box-text">Download a complete backup of all your inventory data</div>
+            </div>
+
+            <button class="btn-primary" onclick="backupData()" style="margin-bottom: 1rem;">⬇️ Backup Data</button>
+
+            <div class="form-group">
+                <label class="form-label">Import Data</label>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button class="btn-primary" onclick="document.getElementById('importFile').click()">⬆️ Import Data</button>
+            </div>
+        </div>
+
+        <!-- Danger Zone -->
+        <div class="settings-section danger-zone">
+            <div class="section-title" style="color: #fca5a5;">⚠️ Danger Zone</div>
+
+            <div class="info-box" style="border-left-color: #ef4444;">
+                <div class="info-box-title" style="color: #fca5a5;">Clear All Data</div>
+                <div class="info-box-text">This action cannot be undone. All products and suppliers will be deleted.</div>
+            </div>
+
+            <button class="btn-danger" onclick="clearAllData()" style="margin-top: 1rem;">🗑️ Clear All Data</button>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('stockflow_auth')) {
+            window.location.href = 'auth.html';
+        }
+
+        const STORAGE_KEY = 'stockflow_products';
+        const SETTINGS_KEY = 'stockflow_settings';
+
+        function initializeSettings() {
+            const userEmail = localStorage.getItem('stockflow_user') || 'admin@stockflow.com';
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('emailAddress').value = userEmail;
+
+            // Load settings
+            const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+            document.getElementById('fullName').value = settings.fullName || 'Administrator';
+            document.getElementById('alertThreshold').value = settings.alertThreshold || 50;
+
+            // Update product count
+            const products = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            document.getElementById('totalProducts').textContent = `${products.length} products`;
+        }
+
+        function updateAccountSettings() {
+            const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+            settings.fullName = document.getElementById('fullName').value;
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+            showNotification('Profile updated successfully', 'success');
+        }
+
+        function toggleDarkMode(btn) {
+            btn.classList.toggle('active');
+        }
+
+        function toggleEmailNotifications(btn) {
+            btn.classList.toggle('active');
+        }
+
+        function toggleAutoSave(btn) {
+            btn.classList.toggle('active');
+        }
+
+        function exportData() {
+            const products = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const suppliers = JSON.parse(localStorage.getItem('stockflow_suppliers') || '[]');
+            const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
+
+            const data = {
+                exportDate: new Date().toISOString(),
+                version: '2.0.1',
+                products,
+                suppliers,
+                settings
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `stockflow-export-${new Date().getTime()}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showNotification('Data exported successfully', 'success');
+        }
+
+        function backupData() {
+            exportData();
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL your data!\n\nAre you absolutely sure? This cannot be undone!')) {
+                if (confirm('Last confirmation: Are you sure you want to delete everything?')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    localStorage.removeItem('stockflow_suppliers');
+                    localStorage.removeItem(SETTINGS_KEY);
+                    showNotification('All data has been cleared', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function navigateTo(page) {
+            if (page === 'dashboard') {
+                window.location.href = 'dashboard.html';
+            } else if (page === 'inventory') {
+                window.location.href = 'inventory.html';
+            } else if (page === 'analytics') {
+                window.location.href = 'analytics.html';
+            } else if (page === 'suppliers') {
+                window.location.href = 'suppliers.html';
+            } else if (page === 'settings') {
+                // Already on settings
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('stockflow_auth');
+            localStorage.removeItem('stockflow_user');
+            window.location.href = 'auth.html';
+        }
+
+        // Initialize
+        window.addEventListener('load', initializeSettings);
+
+        // Import file handler
+        document.getElementById('importFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(data.products || []));
+                    localStorage.setItem('stockflow_suppliers', JSON.stringify(data.suppliers || []));
+                    localStorage.setItem(SETTINGS_KEY, JSON.stringify(data.settings || {}));
+                    showNotification('Data imported successfully', 'success');
+                    setTimeout(() => location.reload(), 1500);
+                } catch (error) {
+                    showNotification('Error importing data. Please check the file format.', 'error');
+                }
+            };
+            reader.readAsText(file);
+            e.target.value = '';
+        });
+    </script>
+</body>
+</html>

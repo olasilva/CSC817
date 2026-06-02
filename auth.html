@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Oren | Authentication Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F9F7F2;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* GOLD & WHITE LUXURY THEME */
+        :root {
+            --gold-primary: #B58B3C;
+            --gold-dark: #9A7532;
+            --gold-light: #D4AF6A;
+            --gold-glow: rgba(181, 139, 60, 0.12);
+            --pure-white: #FFFFFF;
+            --off-white: #FEFCF8;
+            --text-dark: #1F2937;
+            --text-muted: #6B7280;
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Animated background pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-pattern::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle at 20% 30%, rgba(181, 139, 60, 0.04) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(181, 139, 60, 0.05) 0%, transparent 50%);
+            animation: slowDrift 25s ease infinite;
+        }
+
+        .bg-pattern::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.03"><path fill="none" stroke="%23B58B3C" stroke-width="0.5" d="M10 10 L90 10 M10 20 L90 20 M10 30 L90 30 M10 40 L90 40 M10 50 L90 50 M10 60 L90 60 M10 70 L90 70 M10 80 L90 80 M10 90 L90 90 M20 10 L20 90 M30 10 L30 90 M40 10 L40 90 M50 10 L50 90 M60 10 L60 90 M70 10 L70 90 M80 10 L80 90 M90 10 L90 90"/></svg>');
+            background-repeat: repeat;
+            background-size: 40px;
+            animation: slowPan 60s linear infinite;
+        }
+
+        @keyframes slowDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(2%, 1%) rotate(1deg); }
+        }
+
+        @keyframes slowPan {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+
+        /* Main Card */
+        .auth-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 460px;
+            margin: 2rem;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(2px);
+            border-radius: 44px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid rgba(181, 139, 60, 0.2);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .auth-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 55px -12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(181, 139, 60, 0.3);
+        }
+
+        /* Logo Section */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-icon {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+            border-radius: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 15px 30px rgba(181, 139, 60, 0.25);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .logo-section h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-section p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Form Styles */
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.2rem;
+            color: var(--gold-light);
+            font-size: 1rem;
+            pointer-events: none;
+            transition: color 0.2s;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.95rem 1.2rem 0.95rem 3rem;
+            border: 1.5px solid #EFE8DE;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.25s ease;
+            background: var(--off-white);
+            color: var(--text-dark);
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 4px rgba(181, 139, 60, 0.12);
+            background: white;
+        }
+
+        .auth-input:focus + .input-icon {
+            color: var(--gold-primary);
+        }
+
+        .auth-input::placeholder {
+            color: #C9C3B5;
+            font-weight: 400;
+        }
+
+        /* Button */
+        .auth-btn {
+            width: 100%;
+            background: linear-gradient(105deg, var(--gold-primary) 0%, var(--gold-dark) 100%);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 6px 18px rgba(181, 139, 60, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .auth-btn:hover::before {
+            left: 100%;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(181, 139, 60, 0.4);
+            filter: brightness(1.02);
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Demo Credentials */
+        .demo-badge {
+            background: linear-gradient(135deg, #FEFAF3 0%, #FDF7ED 100%);
+            border-radius: 28px;
+            padding: 1rem 1.2rem;
+            margin-top: 1.8rem;
+            text-align: center;
+            border: 1px solid rgba(181, 139, 60, 0.2);
+        }
+
+        .demo-badge p {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .demo-creds {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            font-size: 0.7rem;
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+
+        .demo-creds span {
+            background: rgba(181, 139, 60, 0.12);
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+            color: var(--gold-dark);
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        /* Error Message */
+        .error-message {
+            background: #FDECEA;
+            color: #B33A34;
+            padding: 0.85rem 1rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            margin-bottom: 1.2rem;
+            display: none;
+            align-items: center;
+            gap: 0.6rem;
+            border-left: 3px solid #B33A34;
+            animation: shakeError 0.4s ease;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Footer */
+        .auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 540px) {
+            .auth-card { padding: 1.8rem; margin: 1rem; }
+            .logo-icon { width: 60px; height: 60px; }
+            .logo-icon i { font-size: 2rem; }
+            .logo-section h1 { font-size: 1.7rem; }
+            .demo-creds { flex-direction: column; align-items: center; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h1>OREN</h1>
+                <p>Prestige Inventory Management</p>
+            </div>
+
+            <div id="errorAlert" class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorText">Invalid credentials</span>
+            </div>
+
+            <form id="loginForm">
+                <div class="input-group">
+                    <label class="input-label">EMAIL ADDRESS</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="auth-input" id="emailInput" placeholder="hello@oren.com" value="admin@oren.com" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">PASSWORD</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="auth-input" id="passwordInput" placeholder="••••••••" value="golden123">
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn" id="loginBtn">
+                    <span id="btnText">Access Vault</span>
+                    <i class="fas fa-arrow-right" id="btnIcon"></i>
+                </button>
+            </form>
+
+            <div class="demo-badge">
+                <p><i class="fas fa-gem" style="color: var(--gold-primary);"></i> DEMO ACCESS</p>
+                <div class="demo-creds">
+                    <span><i class="fas fa-envelope" style="font-size: 0.6rem;"></i> admin@oren.com</span>
+                    <span><i class="fas fa-key" style="font-size: 0.6rem;"></i> golden123</span>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure enterprise authentication</span>
+                <i class="fas fa-laptop-code"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const form = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const errorAlert = document.getElementById('errorAlert');
+        const errorTextSpan = document.getElementById('errorText');
+
+        // Demo credentials
+        const VALID_EMAIL = "admin@oren.com";
+        const VALID_PASSWORD = "golden123";
+
+        // Check for existing session
+        if (localStorage.getItem('stockflow_auth') === 'true') {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Show error with animation
+        function showError(message) {
+            errorTextSpan.innerText = message;
+            errorAlert.classList.add('show');
+            
+            // Shake card effect
+            const card = document.querySelector('.auth-card');
+            card.style.transform = 'translateX(0)';
+            setTimeout(() => { card.style.transform = 'translateX(6px)'; }, 50);
+            setTimeout(() => { card.style.transform = 'translateX(-4px)'; }, 120);
+            setTimeout(() => { card.style.transform = 'translateX(2px)'; }, 190);
+            setTimeout(() => { card.style.transform = 'translateX(0)'; }, 260);
+            
+            // Auto hide after 3.5s
+            setTimeout(() => {
+                errorAlert.classList.remove('show');
+            }, 3500);
+        }
+
+        // Set loading state
+        function setLoading(isLoading) {
+            if (isLoading) {
+                btnText.innerHTML = '<span class="spinner"></span> Authenticating';
+                btnIcon.style.opacity = '0';
+                loginBtn.disabled = true;
+            } else {
+                btnText.innerText = 'Access Vault';
+                btnIcon.style.opacity = '1';
+                loginBtn.disabled = false;
+            }
+        }
+
+        // Simulate authentication with realistic delay
+        async function authenticateUser(email, password) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            if (email === VALID_EMAIL && password === VALID_PASSWORD) {
+                return { success: true };
+            } else {
+                return { success: false, message: 'Invalid email or password. Please use demo credentials above.' };
+            }
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
+            
+            // Validation
+            if (!email || !password) {
+                showError('Please fill in both email and password');
+                return;
+            }
+            
+            if (!email.includes('@') || !email.includes('.')) {
+                showError('Please enter a valid email address');
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const result = await authenticateUser(email, password);
+                
+                if (result.success) {
+                    // Store session
+                    localStorage.setItem('stockflow_auth', 'true');
+                    localStorage.setItem('stockflow_user', JSON.stringify({ 
+                        email: email, 
+                        name: 'Oren Admin',
+                        loginTime: new Date().toISOString()
+                    }));
+                    
+                    // Success animation
+                    btnText.innerHTML = '<i class="fas fa-check-circle"></i> Access Granted';
+                    btnIcon.style.opacity = '0';
+                    
+                    // Subtle success effect on card
+                    const card = document.querySelector('.auth-card');
+                    card.style.borderColor = 'var(--gold-primary)';
+                    card.style.boxShadow = '0 0 0 3px rgba(181, 139, 60, 0.2)';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 700);
+                } else {
+                    setLoading(false);
+                    showError(result.message || 'Authentication failed. Please try again.');
+                    
+                    // Clear password field on error for security
+                    passwordInput.value = '';
+                    passwordInput.focus();
+                }
+            } catch (err) {
+                setLoading(false);
+                showError('Network error. Please check your connection.');
+                console.error(err);
+            }
+        });
+
+        // Auto-focus email
+        emailInput.focus();
+
+        // Optional: Add subtle floating effect on inputs
+        const inputs = document.querySelectorAll('.auth-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.01)';
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+
+        // Enter key support is already handled by form submit
+    </script>
+</body>
+</html>

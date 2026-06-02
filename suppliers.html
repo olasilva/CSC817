@@ -1,0 +1,605 @@
+<!-- suppliers.html - Suppliers Management -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suppliers - StockFlow Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .sidebar {
+            background: #1e293b;
+            width: 260px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            border-right: 1px solid #334155;
+            z-index: 100;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: #94a3b8;
+            text-decoration: none;
+            transition: all 0.2s;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #0f172a;
+            color: #3b82f6;
+        }
+
+        .supplier-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+
+        .supplier-card:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+        }
+
+        .supplier-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .supplier-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .supplier-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        .status-inactive {
+            background: #475569;
+            color: #cbd5e1;
+        }
+
+        .supplier-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .supplier-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #475569;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn-secondary:hover {
+            background: #64748b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #94a3b8;
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #334155;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 1rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .form-actions button {
+            flex: 1;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: #064e3b;
+            color: #6ee7b7;
+            border: 1px solid #047857;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .notification.hide {
+            animation: slideOut 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="p-6 border-b border-gray-700">
+            <h1 class="text-2xl font-bold text-blue-500">StockFlow Pro</h1>
+            <p class="text-gray-400 text-sm mt-1">Enterprise Inventory</p>
+        </div>
+        
+        <nav class="mt-6">
+            <a class="nav-link" onclick="navigateTo('dashboard')">
+                <span>📊</span> Dashboard
+            </a>
+            <a class="nav-link" onclick="navigateTo('inventory')">
+                <span>📦</span> Inventory
+            </a>
+            <a class="nav-link" onclick="navigateTo('analytics')">
+                <span>📈</span> Analytics
+            </a>
+            <a class="nav-link active" onclick="navigateTo('suppliers')">
+                <span>👥</span> Suppliers
+            </a>
+            <a class="nav-link" onclick="navigateTo('settings')">
+                <span>⚙️</span> Settings
+            </a>
+            <a class="nav-link" onclick="logout()">
+                <span>🚪</span> Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h2 class="text-3xl font-bold">Suppliers Management</h2>
+                <p class="text-gray-400 mt-1">Manage your suppliers and vendors</p>
+            </div>
+            <button class="btn-primary" onclick="openSupplierModal()">+ Add Supplier</button>
+        </div>
+
+        <!-- Suppliers List -->
+        <div id="suppliersContainer">
+            <!-- Generated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Supplier Modal -->
+    <div class="modal" id="supplierModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Supplier</h2>
+                <button class="close-btn" onclick="closeSupplierModal()">&times;</button>
+            </div>
+            <form id="supplierForm" onsubmit="saveSupplier(event)">
+                <div class="form-group">
+                    <label class="form-label">Company Name *</label>
+                    <input type="text" class="form-input" id="supplierName" placeholder="Enter company name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contact Person *</label>
+                    <input type="text" class="form-input" id="contactPerson" placeholder="Enter contact name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-input" id="supplierEmail" placeholder="supplier@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone *</label>
+                    <input type="tel" class="form-input" id="supplierPhone" placeholder="+1 (555) 000-0000" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-input" id="supplierAddress" placeholder="Street address">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-input" id="supplierStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeSupplierModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Supplier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication
+        if (!localStorage.getItem('stockflow_auth')) {
+            window.location.href = 'auth.html';
+        }
+
+        const STORAGE_KEY = 'stockflow_suppliers';
+        let suppliers = [];
+        let currentEditingId = null;
+
+        function initializeData() {
+            loadSuppliers();
+            if (suppliers.length === 0) {
+                createDefaultSuppliers();
+            }
+            renderSuppliers();
+        }
+
+        function createDefaultSuppliers() {
+            suppliers = [
+                {
+                    id: 1,
+                    name: 'TechCore Industries',
+                    contact: 'John Smith',
+                    email: 'contact@techcore.com',
+                    phone: '+1 (555) 123-4567',
+                    address: '123 Tech Ave, Silicon Valley, CA 94025',
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'Global Components Ltd',
+                    contact: 'Sarah Chen',
+                    email: 'sales@globalcomp.com',
+                    phone: '+1 (555) 234-5678',
+                    address: '456 Supply St, New York, NY 10001',
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 3,
+                    name: 'Advanced Materials Co',
+                    contact: 'Mike Johnson',
+                    email: 'info@advmat.com',
+                    phone: '+1 (555) 345-6789',
+                    address: '789 Industrial Blvd, Houston, TX 77001',
+                    status: 'active',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(suppliers));
+        }
+
+        function loadSuppliers() {
+            suppliers = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+
+        function saveSuppliers() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(suppliers));
+        }
+
+        function renderSuppliers() {
+            const container = document.getElementById('suppliersContainer');
+            
+            if (suppliers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">👥</div>
+                        <h3 class="text-lg font-semibold">No suppliers yet</h3>
+                        <p class="text-sm mt-2">Add your first supplier to get started</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = suppliers.map(supplier => `
+                <div class="supplier-card">
+                    <div class="supplier-header">
+                        <div class="supplier-name">${supplier.name}</div>
+                        <span class="supplier-status status-${supplier.status}">
+                            ${supplier.status === 'active' ? '🟢 Active' : '🔴 Inactive'}
+                        </span>
+                    </div>
+                    <div class="supplier-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Contact Person</span>
+                            <span class="detail-value">${supplier.contact}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Email</span>
+                            <span class="detail-value">${supplier.email}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">${supplier.phone}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Address</span>
+                            <span class="detail-value">${supplier.address || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="supplier-actions">
+                        <button class="btn-secondary" onclick="editSupplier(${supplier.id})">Edit</button>
+                        <button class="btn-secondary" onclick="deleteSupplier(${supplier.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openSupplierModal() {
+            currentEditingId = null;
+            document.getElementById('modalTitle').textContent = 'Add Supplier';
+            document.getElementById('supplierForm').reset();
+            document.getElementById('supplierModal').classList.add('active');
+        }
+
+        function closeSupplierModal() {
+            document.getElementById('supplierModal').classList.remove('active');
+            document.getElementById('supplierForm').reset();
+            currentEditingId = null;
+        }
+
+        function editSupplier(id) {
+            const supplier = suppliers.find(s => s.id === id);
+            if (!supplier) return;
+
+            currentEditingId = id;
+            document.getElementById('modalTitle').textContent = 'Edit Supplier';
+            document.getElementById('supplierName').value = supplier.name;
+            document.getElementById('contactPerson').value = supplier.contact;
+            document.getElementById('supplierEmail').value = supplier.email;
+            document.getElementById('supplierPhone').value = supplier.phone;
+            document.getElementById('supplierAddress').value = supplier.address || '';
+            document.getElementById('supplierStatus').value = supplier.status;
+
+            document.getElementById('supplierModal').classList.add('active');
+        }
+
+        function deleteSupplier(id) {
+            if (confirm('Are you sure you want to delete this supplier?')) {
+                suppliers = suppliers.filter(s => s.id !== id);
+                saveSuppliers();
+                renderSuppliers();
+                showNotification('Supplier deleted successfully', 'success');
+            }
+        }
+
+        function saveSupplier(e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('supplierName').value,
+                contact: document.getElementById('contactPerson').value,
+                email: document.getElementById('supplierEmail').value,
+                phone: document.getElementById('supplierPhone').value,
+                address: document.getElementById('supplierAddress').value,
+                status: document.getElementById('supplierStatus').value
+            };
+
+            if (currentEditingId) {
+                const index = suppliers.findIndex(s => s.id === currentEditingId);
+                if (index !== -1) {
+                    suppliers[index] = { ...suppliers[index], ...formData };
+                    showNotification('Supplier updated successfully', 'success');
+                }
+            } else {
+                suppliers.push({
+                    id: Math.max(...suppliers.map(s => s.id), 0) + 1,
+                    ...formData,
+                    createdAt: new Date().toISOString()
+                });
+                showNotification('Supplier added successfully', 'success');
+            }
+
+            saveSuppliers();
+            renderSuppliers();
+            closeSupplierModal();
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.classList.add('hide');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function navigateTo(page) {
+            if (page === 'dashboard') {
+                window.location.href = 'dashboard.html';
+            } else if (page === 'inventory') {
+                window.location.href = 'inventory.html';
+            } else if (page === 'analytics') {
+                window.location.href = 'analytics.html';
+            } else if (page === 'suppliers') {
+                // Already on suppliers
+            } else if (page === 'settings') {
+                window.location.href = 'settings.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('stockflow_auth');
+            localStorage.removeItem('stockflow_user');
+            window.location.href = 'auth.html';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('supplierModal');
+            if (event.target === modal) {
+                closeSupplierModal();
+            }
+        };
+
+        window.addEventListener('load', initializeData);
+    </script>
+</body>
+</html>

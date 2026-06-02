@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Oren | Prestige Loading</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        /* GOLD & WHITE LUXURY LOADER */
+        :root {
+            --gold-primary: #B58B3C;
+            --gold-dark: #9A7532;
+            --gold-light: #D4AF6A;
+            --gold-glow: rgba(181, 139, 60, 0.15);
+            --pure-white: #FFFFFF;
+            --off-white: #FEFCF8;
+            --text-muted: #6B7280;
+        }
+
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FEFCF8 0%, #F9F7F2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .loader-container.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Animated logo */
+        .loader-logo {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+            border-radius: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 20px 35px -8px rgba(181, 139, 60, 0.3);
+            animation: floatGlow 2s ease-in-out infinite;
+        }
+
+        .logo-icon i {
+            font-size: 2.8rem;
+            color: white;
+        }
+
+        .loader-logo h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .loader-logo p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        /* Progress bar - gold themed */
+        .loader-progress-container {
+            width: 320px;
+            margin: 2rem 0;
+        }
+
+        .loader-bar {
+            width: 100%;
+            height: 3px;
+            background: #E8E2D6;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-light) 0%, var(--gold-primary) 100%);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 0 8px rgba(181, 139, 60, 0.5);
+        }
+
+        .loader-percentage {
+            text-align: center;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--gold-primary);
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+
+        .loader-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            font-weight: 500;
+            text-align: center;
+            min-height: 2rem;
+        }
+
+        /* Elegant steps */
+        .loading-steps {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: #C9C3B5;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #F0EBE1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .step-icon i {
+            font-size: 1rem;
+            color: #C9C3B5;
+            transition: all 0.3s ease;
+        }
+
+        .step span:last-child {
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .step.active .step-icon {
+            background: var(--gold-glow);
+            box-shadow: 0 0 0 2px var(--gold-primary);
+        }
+
+        .step.active .step-icon i {
+            color: var(--gold-primary);
+        }
+
+        .step.active span:last-child {
+            color: var(--gold-primary);
+            font-weight: 700;
+        }
+
+        .step.completed .step-icon {
+            background: var(--gold-primary);
+        }
+
+        .step.completed .step-icon i {
+            color: white;
+        }
+
+        .step.completed span:last-child {
+            color: var(--gold-primary);
+        }
+
+        /* Decorative elements */
+        .ambient-glow {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(181,139,60,0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-1 {
+            top: -150px;
+            left: -150px;
+            animation: floatSlow 25s ease infinite;
+        }
+
+        .glow-2 {
+            bottom: -150px;
+            right: -150px;
+            animation: floatSlow 20s ease infinite reverse;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatGlow {
+            0%, 100% {
+                transform: translateY(0px);
+                box-shadow: 0 20px 35px -8px rgba(181, 139, 60, 0.3);
+            }
+            50% {
+                transform: translateY(-5px);
+                box-shadow: 0 25px 40px -6px rgba(181, 139, 60, 0.45);
+            }
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 20px) rotate(5deg); }
+        }
+
+        @keyframes pulseStep {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .step.active .step-icon {
+            animation: pulseStep 0.6s ease infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 550px) {
+            .loader-progress-container { width: 260px; }
+            .loading-steps { gap: 1rem; }
+            .step { min-width: 50px; }
+            .step-icon { width: 30px; height: 30px; }
+            .step-icon i { font-size: 0.8rem; }
+            .logo-icon { width: 65px; height: 65px; }
+            .logo-icon i { font-size: 2.2rem; }
+            .loader-logo h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-container" id="loader">
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+        
+        <div class="loader-logo">
+            <div class="logo-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h1>OREN</h1>
+            <p>PRESTIGE INVENTORY</p>
+        </div>
+
+        <div class="loader-progress-container">
+            <div class="loader-bar">
+                <div class="loader-progress" id="progressBar"></div>
+            </div>
+            <div class="loader-percentage" id="percentageText">0%</div>
+        </div>
+
+        <div class="loader-text" id="loaderText">Initializing secure vault</div>
+
+        <div class="loading-steps" id="stepsContainer">
+            <div class="step" id="step1">
+                <div class="step-icon"><i class="fas fa-microchip"></i></div>
+                <span>Core</span>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-icon"><i class="fas fa-database"></i></div>
+                <span>Database</span>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-icon"><i class="fas fa-fingerprint"></i></div>
+                <span>Auth</span>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-icon"><i class="fas fa-cubes"></i></div>
+                <span>Inventory</span>
+            </div>
+            <div class="step" id="step5">
+                <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                <span>Analytics</span>
+            </div>
+            <div class="step" id="step6">
+                <div class="step-icon"><i class="fas fa-check-double"></i></div>
+                <span>Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Extended, more deliberate loading sequence with smoother timing
+        const loaderSteps = [
+            { 
+                text: 'Decrypting secure enclave...', 
+                progress: 8, 
+                step: 1,
+                duration: 600
+            },
+            { 
+                text: 'Calibrating core systems & protocols', 
+                progress: 18, 
+                step: 1,
+                duration: 500
+            },
+            { 
+                text: 'Establishing database connection', 
+                progress: 28, 
+                step: 2,
+                duration: 650
+            },
+            { 
+                text: 'Validating data integrity & schemas', 
+                progress: 38, 
+                step: 2,
+                duration: 550
+            },
+            { 
+                text: 'Loading authentication modules', 
+                progress: 48, 
+                step: 3,
+                duration: 600
+            },
+            { 
+                text: 'Verifying security certificates', 
+                progress: 55, 
+                step: 3,
+                duration: 500
+            },
+            { 
+                text: 'Synchronizing inventory vault', 
+                progress: 65, 
+                step: 4,
+                duration: 700
+            },
+            { 
+                text: 'Indexing product catalog', 
+                progress: 75, 
+                step: 4,
+                duration: 550
+            },
+            { 
+                text: 'Loading analytics engine', 
+                progress: 85, 
+                step: 5,
+                duration: 600
+            },
+            { 
+                text: 'Optimizing dashboard widgets', 
+                progress: 92, 
+                step: 5,
+                duration: 500
+            },
+            { 
+                text: 'Finalizing secure handshake', 
+                progress: 97, 
+                step: 6,
+                duration: 550
+            },
+            { 
+                text: 'Welcome to Oren Prestige', 
+                progress: 100, 
+                step: 6,
+                duration: 800
+            }
+        ];
+
+        let currentStepIndex = 0;
+        let currentProgress = 0;
+        const progressBar = document.getElementById('progressBar');
+        const percentageText = document.getElementById('percentageText');
+        const loaderText = document.getElementById('loaderText');
+        
+        // Update step UI
+        function updateSteps(activeStepNum) {
+            for (let i = 1; i <= 6; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                stepEl.classList.remove('active', 'completed');
+                
+                if (i < activeStepNum) {
+                    stepEl.classList.add('completed');
+                } else if (i === activeStepNum) {
+                    stepEl.classList.add('active');
+                }
+            }
+        }
+
+        // Format percentage with animation
+        function updateProgress(targetPercent) {
+            const startPercent = currentProgress;
+            const diff = targetPercent - startPercent;
+            const duration = 300;
+            const startTime = performance.now();
+            
+            function animateProgress(now) {
+                const elapsed = now - startTime;
+                const t = Math.min(1, elapsed / duration);
+                const easeOutCubic = 1 - Math.pow(1 - t, 3);
+                const newPercent = Math.floor(startPercent + (diff * easeOutCubic));
+                currentProgress = newPercent;
+                progressBar.style.width = currentProgress + '%';
+                percentageText.textContent = currentProgress + '%';
+                
+                if (t < 1) {
+                    requestAnimationFrame(animateProgress);
+                } else {
+                    progressBar.style.width = targetPercent + '%';
+                    percentageText.textContent = targetPercent + '%';
+                    currentProgress = targetPercent;
+                }
+            }
+            
+            requestAnimationFrame(animateProgress);
+        }
+
+        // Main loading sequence with deliberate pacing
+        async function runLoader() {
+            for (let i = 0; i < loaderSteps.length; i++) {
+                const step = loaderSteps[i];
+                
+                // Update UI elements
+                loaderText.textContent = step.text;
+                updateProgress(step.progress);
+                updateSteps(step.step);
+                
+                // Add subtle text fade effect
+                loaderText.style.opacity = '0';
+                setTimeout(() => {
+                    loaderText.style.opacity = '1';
+                    loaderText.style.transition = 'opacity 0.2s ease';
+                }, 50);
+                
+                // Wait for the specified duration (plus a small random factor for realism)
+                const waitTime = step.duration + (Math.random() * 150);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
+            }
+            
+            // Final animation before redirect
+            loaderText.innerHTML = '<i class="fas fa-gem"></i> Vault access granted';
+            
+            // Small celebration effect on the logo
+            const logoIcon = document.querySelector('.logo-icon');
+            logoIcon.style.animation = 'none';
+            logoIcon.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                logoIcon.style.transform = '';
+                logoIcon.style.animation = 'floatGlow 2s ease-in-out infinite';
+            }, 200);
+            
+            // Redirect to auth page after completion
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.classList.add('hidden');
+                
+                // Slight delay to let fade out complete
+                setTimeout(() => {
+                    window.location.href = 'auth.html';
+                }, 800);
+            }, 900);
+        }
+
+        // Start the loader with a small initial delay for dramatic effect
+        setTimeout(() => {
+            runLoader();
+        }, 300);
+    </script>
+</body>
+</html>
