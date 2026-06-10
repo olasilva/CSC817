@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supplies - My Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #B8941F;
+            --gold-light: #F0D060;
+            --gold-bg: #FFFDF5;
+            --gold-border: #E8D5A3;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --white: #ffffff;
+            --bg: #f8f9fc;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        .topbar {
+            background: var(--white);
+            border-bottom: 2px solid var(--gold-border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar h1 { font-size: 1.15rem; font-weight: 700; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: #1a1a2e;
+        }
+        .content { padding: 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--gold-border);
+        }
+        .section-head h3 { font-size: 1rem; font-weight: 700; }
+        .supplier-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        .supplier-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-top: 3px solid var(--gold);
+            box-shadow: var(--shadow-sm);
+        }
+        .supplier-card h4 { font-weight: 700; margin-bottom: 0.5rem; }
+        .supplier-card p { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.3rem; }
+        .restock-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--gold);
+        }
+        .restock-table th {
+            padding: 0.7rem 1rem;
+            text-align: left;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            background: var(--gold-bg);
+            color: var(--gold-dark);
+            font-weight: 700;
+        }
+        .restock-table td { padding: 0.65rem 1rem; border-top: 1px solid var(--border); font-size: 0.8rem; }
+        @media (max-width: 768px) { .supplier-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1><i class="fas fa-truck" style="color:var(--gold);margin-right:0.5rem;"></i>Supplies & Restocking</h1>
+            <p style="font-size:0.75rem;color:var(--text-secondary);">Manage suppliers and restock orders</p>
+        </div>
+        <button class="btn" onclick="window.location.href='main.html'"><i class="fas fa-arrow-left"></i> Back</button>
+    </header>
+    <div class="content">
+        <div class="section-head"><h3>Supplier Directory</h3></div>
+        <div class="supplier-grid">
+            <div class="supplier-card"><h4>TechSupply Inc.</h4><p>📧 orders@techsupply.com</p><p>📞 +1 (555) 100-2000</p><p>📍 New York, NY</p><p style="color:var(--gold-dark);font-weight:600;">IT Equipment</p></div>
+            <div class="supplier-card"><h4>OfficeMax Pro</h4><p>📧 sales@officemax.com</p><p>📞 +1 (555) 300-4000</p><p>📍 Chicago, IL</p><p style="color:var(--gold-dark);font-weight:600;">Office Supplies</p></div>
+            <div class="supplier-card"><h4>FurniCo Ltd.</h4><p>📧 info@furnico.com</p><p>📞 +1 (555) 500-6000</p><p>📍 Los Angeles, CA</p><p style="color:var(--gold-dark);font-weight:600;">Furniture</p></div>
+            <div class="supplier-card"><h4>ToolMaster</h4><p>📧 support@toolmaster.com</p><p>📞 +1 (555) 700-8000</p><p>📍 Houston, TX</p><p style="color:var(--gold-dark);font-weight:600;">Tools & Equipment</p></div>
+            <div class="supplier-card"><h4>ConsumableDepot</h4><p>📧 orders@consumabledepot.com</p><p>📞 +1 (555) 900-1000</p><p>📍 Miami, FL</p><p style="color:var(--gold-dark);font-weight:600;">Consumables</p></div>
+            <div class="supplier-card"><h4>GlobalParts Co.</h4><p>📧 parts@globalparts.com</p><p>📞 +1 (555) 110-1200</p><p>📍 Seattle, WA</p><p style="color:var(--gold-dark);font-weight:600;">General</p></div>
+        </div>
+        <div class="section-head" style="margin-top:2rem;"><h3>Recent Restock Orders</h3></div>
+        <div style="overflow-x:auto;">
+            <table class="restock-table">
+                <thead><tr><th>Product</th><th>Supplier</th><th>Qty Added</th><th>Source</th><th>Date</th></tr></thead>
+                <tbody id="restockTableBody">
+                    <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-secondary);">Loading restock data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        const API = 'http://localhost:3000/api';
+        async function loadRestocks() {
+            try {
+                const res = await fetch(`${API}/activity?type=PRODUCT_RESTOCKED&limit=20`);
+                const data = await res.json();
+                const restocks = (data.data || []).filter(a => a.type === 'PRODUCT_RESTOCKED');
+                document.getElementById('restockTableBody').innerHTML = restocks.length ? restocks.map(r => `<tr><td>${r.details}</td><td>—</td><td>—</td><td>—</td><td>${new Date(r.timestamp||r.created_at).toLocaleDateString()}</td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:2rem;">No restock orders yet</td></tr>';
+            } catch(e) { console.error(e); }
+        }
+        window.addEventListener('load', loadRestocks);
+    </script>
+</body>
+</html>

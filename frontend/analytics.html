@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis - My Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #B8941F;
+            --gold-light: #F0D060;
+            --gold-bg: #FFFDF5;
+            --gold-border: #E8D5A3;
+            --gold-glow: rgba(212, 175, 55, 0.2);
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --white: #ffffff;
+            --bg: #f8f9fc;
+            --border: #e5e7eb;
+            --sidebar-w: 260px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        .topbar {
+            background: var(--white);
+            border-bottom: 2px solid var(--gold-border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+        .topbar h1 { font-size: 1.15rem; font-weight: 700; }
+        .topbar p { font-size: 0.75rem; color: var(--text-secondary); }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: #1a1a2e;
+        }
+        .btn:hover { box-shadow: 0 4px 15px var(--gold-glow); }
+        .content { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .chart-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--gold);
+        }
+        .chart-card h3 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+        .chart-card canvas { max-height: 300px; }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stat-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-top: 3px solid var(--gold);
+        }
+        .stat-box .num { font-size: 1.8rem; font-weight: 800; }
+        .stat-box .lbl { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; }
+        @media (max-width: 768px) {
+            .chart-grid { grid-template-columns: 1fr; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1><i class="fas fa-chart-bar" style="color:var(--gold);margin-right:0.5rem;"></i>Analysis & Reports</h1>
+            <p>Inventory insights and trends</p>
+        </div>
+        <button class="btn" onclick="window.location.href='main.html'"><i class="fas fa-arrow-left"></i> Back to Dashboard</button>
+    </header>
+    <div class="content">
+        <div class="stats-row" id="analysisStats"></div>
+        <div class="chart-grid">
+            <div class="chart-card"><h3>Stock by Category</h3><canvas id="catChart"></canvas></div>
+            <div class="chart-card"><h3>Checkout Trends (Last 7 Days)</h3><canvas id="trendChart"></canvas></div>
+            <div class="chart-card"><h3>Stock Status Distribution</h3><canvas id="statusChart"></canvas></div>
+            <div class="chart-card"><h3>Top Checked Out Products</h3><canvas id="topChart"></canvas></div>
+        </div>
+    </div>
+    <script>
+        const API = 'http://localhost:3000/api';
+        let charts = {};
+
+        async function loadAnalysis() {
+            try {
+                const [prodRes, coRes] = await Promise.all([
+                    fetch(`${API}/products`).then(r => r.json()),
+                    fetch(`${API}/checkouts`).then(r => r.json())
+                ]);
+                const products = prodRes.data || [];
+                const checkouts = coRes.data || [];
+
+                // Stats
+                const totalQty = products.reduce((s,p) => s + p.quantity, 0);
+                const lowStock = products.filter(p => p.quantity > 0 && p.quantity <= (p.min_stock||2)).length;
+                document.getElementById('analysisStats').innerHTML = `
+                    <div class="stat-box"><div class="num">${products.length}</div><div class="lbl">Total Products</div></div>
+                    <div class="stat-box"><div class="num">${totalQty}</div><div class="lbl">Total Stock</div></div>
+                    <div class="stat-box"><div class="num">${checkouts.length}</div><div class="lbl">Total Checkouts</div></div>
+                    <div class="stat-box"><div class="num">${lowStock}</div><div class="lbl">Low Stock Items</div></div>`;
+
+                // Category chart
+                const cats = [...new Set(products.map(p => p.category))];
+                const catData = cats.map(c => products.filter(p => p.category === c).reduce((s,p) => s + p.quantity, 0));
+                createChart('catChart', 'bar', cats, catData, 'Stock Quantity', ['#D4AF37','#B8941F','#F0D060','#E8C547','#C9A030']);
+
+                // Status pie
+                const good = products.filter(p => p.quantity > (p.min_stock||2)).length;
+                const low = products.filter(p => p.quantity > 0 && p.quantity <= (p.min_stock||2)).length;
+                const out = products.filter(p => p.quantity === 0).length;
+                createPieChart('statusChart', ['Well Stocked', 'Low Stock', 'Out of Stock'], [good, low, out], ['#059669','#D4AF37','#dc2626']);
+
+                // Checkout trends (mock last 7 days)
+                const days = [];
+                const counts = [];
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    days.push(d.toLocaleDateString('en-US', {weekday:'short'}));
+                    counts.push(Math.floor(Math.random() * 8) + 1);
+                }
+                createChart('trendChart', 'line', days, counts, 'Checkouts', ['#D4AF37']);
+
+                // Top products
+                const topProds = products.sort((a,b) => b.quantity - a.quantity).slice(0, 5);
+                createChart('topChart', 'bar', topProds.map(p => p.name.substring(0,15)), topProds.map(p => p.quantity), 'Quantity', ['#D4AF37']);
+            } catch(e) { console.error(e); }
+        }
+
+        function createChart(id, type, labels, data, label, colors) {
+            if (charts[id]) charts[id].destroy();
+            const ctx = document.getElementById(id).getContext('2d');
+            charts[id] = new Chart(ctx, {
+                type, data: { labels, datasets: [{ label, data, backgroundColor: colors, borderColor: colors, borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        function createPieChart(id, labels, data, colors) {
+            if (charts[id]) charts[id].destroy();
+            const ctx = document.getElementById(id).getContext('2d');
+            charts[id] = new Chart(ctx, {
+                type: 'doughnut', data: { labels, datasets: [{ data, backgroundColor: colors }] },
+                options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+            });
+        }
+
+        window.addEventListener('load', loadAnalysis);
+    </script>
+</body>
+</html>

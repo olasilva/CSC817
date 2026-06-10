@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - My Inventory System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --gold: #D4AF37;
+            --gold-dark: #B8941F;
+            --gold-light: #F0D060;
+            --gold-bg: #FFFDF5;
+            --gold-border: #E8D5A3;
+            --text: #111827;
+            --text-secondary: #6b7280;
+            --white: #ffffff;
+            --bg: #f8f9fc;
+            --border: #e5e7eb;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        .topbar {
+            background: var(--white);
+            border-bottom: 2px solid var(--gold-border);
+            padding: 0 2rem;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .topbar h1 { font-size: 1.15rem; font-weight: 700; }
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            border: none;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: #1a1a2e;
+        }
+        .content { padding: 2rem; max-width: 800px; margin: 0 auto; }
+        .settings-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border-top: 3px solid var(--gold);
+            box-shadow: var(--shadow-sm);
+        }
+        .settings-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; text-transform: uppercase; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--gold); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-row span { font-size: 0.85rem; }
+        .toggle-row small { color: var(--text-secondary); display: block; font-size: 0.7rem; }
+        .toggle-switch { position: relative; width: 44px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: #d1d5db; border-radius: 24px; transition: 0.3s; }
+        .toggle-slider:before { content: ''; position: absolute; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+        .toggle-switch input:checked + .toggle-slider { background: var(--gold); }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(20px); }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div>
+            <h1><i class="fas fa-cog" style="color:var(--gold);margin-right:0.5rem;"></i>Settings</h1>
+            <p style="font-size:0.75rem;color:var(--text-secondary);">System configuration</p>
+        </div>
+        <button class="btn" onclick="window.location.href='main.html'"><i class="fas fa-arrow-left"></i> Back</button>
+    </header>
+    <div class="content">
+        <div class="settings-card">
+            <h3>Profile Information</h3>
+            <div class="form-row">
+                <div class="form-group"><label>Username</label><input type="text" id="setUsername" value="admin" placeholder="Username"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="setEmail" value="admin@inventory.com" placeholder="Email"></div>
+            </div>
+            <div class="form-group"><label>Role</label><input type="text" value="Administrator" disabled style="background:#f9fafb;"></div>
+            <button class="btn" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+        </div>
+
+        <div class="settings-card">
+            <h3>Notifications</h3>
+            <div class="toggle-row"><div><span>Low Stock Alerts</span><small>Get notified when items run low</small></div><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="toggle-row"><div><span>Checkout Notifications</span><small>Alert on item checkouts</small></div><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+            <div class="toggle-row"><div><span>Restock Reminders</span><small>Weekly restock summary</small></div><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+            <div class="toggle-row"><div><span>Email Reports</span><small>Monthly inventory report</small></div><label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+        </div>
+
+        <div class="settings-card">
+            <h3>System Information</h3>
+            <div class="toggle-row"><span>Version</span><span style="font-weight:600;">2.1.0</span></div>
+            <div class="toggle-row"><span>Last Updated</span><span>2024-12-10</span></div>
+            <div class="toggle-row"><span>API Status</span><span style="color:#059669;font-weight:600;">● Connected</span></div>
+        </div>
+    </div>
+    <script>
+        function saveProfile() {
+            const username = document.getElementById('setUsername').value;
+            const email = document.getElementById('setEmail').value;
+            alert('Settings saved successfully!\nUsername: ' + username + '\nEmail: ' + email);
+        }
+    </script>
+</body>
+</html>
