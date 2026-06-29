@@ -10,4 +10,7 @@
 - [ ] Test locally with Vercel-like server behavior (npm start)
 - [ ] Provide instructions: how to deploy to Vercel and set env vars
 
+# TODO - Documentation
+
+- [x] Create functional requirement documents and system-behavior documents (from existing frontend implementation)
 

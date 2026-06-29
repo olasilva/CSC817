@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Inventory Pro | Asset Management System</title>
+    <title>FREERAMSIL INVENTORY PRO | Asset Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -108,10 +108,13 @@
         .btn-primary { background: linear-gradient(135deg, var(--gold-dark), var(--gold)); color: #1a1a2e; }
         .btn-primary:hover { box-shadow: 0 4px 15px var(--gold-glow); transform: translateY(-1px); }
         .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #047857; }
         .btn-outline { background: white; border: 1px solid var(--gold-border); color: var(--text); }
         .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); background: var(--gold-bg); }
         .btn-danger { background: var(--danger); color: white; }
+        .btn-danger:hover { background: #b91c1c; }
         .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
+        .btn-xs { padding: 0.2rem 0.45rem; font-size: 0.65rem; }
 
         .content { padding: 1.5rem 2rem; }
 
@@ -122,11 +125,12 @@
             transition: all 0.2s;
         }
         .stat-box:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
-        .stat-icon-sm { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+        .stat-icon-sm { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 0.5rem; }
         .stat-icon-sm.gold { background: var(--gold-bg); color: var(--gold-dark); }
         .stat-icon-sm.green { background: var(--success-light); color: var(--success); }
         .stat-icon-sm.amber { background: var(--warning-light); color: var(--warning); }
         .stat-icon-sm.cyan { background: var(--info-light); color: var(--info); }
+        .stat-icon-sm.red { background: var(--danger-light); color: var(--danger); }
         .stat-num { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; }
         .stat-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
 
@@ -147,23 +151,30 @@
         .prod-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.85rem; }
         .prod-card {
             background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg);
-            overflow: hidden; cursor: pointer; transition: all 0.25s; box-shadow: var(--shadow-xs);
-            border-top: 2px solid var(--gold-border);
+            overflow: hidden; transition: all 0.25s; box-shadow: var(--shadow-xs);
+            border-top: 2px solid var(--gold-border); display: flex; flex-direction: column;
         }
         .prod-card:hover { box-shadow: 0 8px 25px var(--gold-glow); border-color: var(--gold); transform: translateY(-2px); }
-        .prod-img { height: 130px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .prod-img { height: 140px; background: #f9fafb; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative; }
         .prod-img img { width: 100%; height: 100%; object-fit: cover; }
-        .no-img { font-size: 2rem; color: var(--gold-border); }
-        .prod-body { padding: 0.6rem; }
-        .prod-name { font-weight: 600; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.2rem; }
+        .prod-img .placeholder-icon { font-size: 3rem; color: #d1d5db; }
+        .prod-img .img-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; color: white; font-size: 0.75rem; font-weight: 600; gap: 0.3rem; }
+        .prod-img:hover .img-overlay { opacity: 1; }
+        .prod-body { padding: 0.6rem; flex: 1; }
+        .prod-name { font-weight: 600; font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.2rem; cursor: pointer; }
+        .prod-name:hover { color: var(--gold-dark); }
         .prod-sku { font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .prod-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+        .prod-location { font-size: 0.6rem; color: var(--text-secondary); }
+        .prod-location i { margin-right: 0.2rem; color: var(--gold); }
+        .prod-actions { display: flex; gap: 0.3rem; padding: 0 0.6rem 0.6rem; flex-wrap: wrap; }
         .pill { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 12px; font-size: 0.6rem; font-weight: 700; }
         .pill-good { background: var(--success-light); color: var(--success); }
         .pill-low { background: var(--warning-light); color: var(--warning); }
         .pill-out { background: var(--danger-light); color: var(--danger); }
 
-        .table-wrap { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); border-top: 3px solid var(--gold); overflow: hidden; }
-        .table-wrap table { width: 100%; border-collapse: collapse; }
+        .table-wrap { background: var(--white); border-radius: var(--radius-lg); border: 1px solid var(--border); border-top: 3px solid var(--gold); overflow: hidden; overflow-x: auto; }
+        .table-wrap table { width: 100%; border-collapse: collapse; min-width: 600px; }
         .table-wrap thead { background: var(--gold-bg); }
         .table-wrap th { padding: 0.6rem 0.8rem; text-align: left; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gold-dark); font-weight: 700; border-bottom: 2px solid var(--gold-border); }
         .table-wrap td { padding: 0.6rem 0.8rem; border-top: 1px solid var(--border); font-size: 0.75rem; }
@@ -175,7 +186,7 @@
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: center; justify-content: center; }
         .modal-overlay.show { display: flex; }
-        .modal-box { background: var(--white); border-radius: var(--radius-xl); width: 92%; max-width: 520px; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-xl); border-top: 4px solid var(--gold); animation: pop 0.25s ease; }
+        .modal-box { background: var(--white); border-radius: var(--radius-xl); width: 92%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-xl); border-top: 4px solid var(--gold); animation: pop 0.25s ease; }
         @keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-head { padding: 1rem 1.25rem; border-bottom: 1px solid var(--gold-border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; border-radius: var(--radius-xl) var(--radius-xl) 0 0; }
         .modal-head h3 { font-size: 0.95rem; font-weight: 700; }
@@ -192,31 +203,44 @@
         .form-actions button { flex: 1; }
         .summary-box { background: var(--gold-bg); border: 1px solid var(--gold-border); border-radius: var(--radius); padding: 0.75rem; margin-bottom: 1rem; font-size: 0.8rem; }
 
+        /* Image Upload Styles */
+        .image-upload-area {
+            border: 2px dashed var(--gold-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--gold-bg);
+            position: relative;
+        }
+        .image-upload-area:hover { border-color: var(--gold); background: #fffef5; }
+        .image-upload-area.drag-over { border-color: var(--gold); background: #fffde8; box-shadow: 0 0 0 4px var(--gold-glow); }
+        .image-upload-area i { font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem; display: block; }
+        .image-upload-area .upload-text { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
+        .image-upload-area .upload-hint { font-size: 0.65rem; color: var(--text-muted); margin-top: 0.25rem; }
+        .image-preview-container { position: relative; display: inline-block; margin-top: 0.5rem; }
+        .image-preview-container img { max-width: 200px; max-height: 150px; border-radius: var(--radius); border: 2px solid var(--gold-border); }
+        .image-preview-container .remove-image-btn {
+            position: absolute; top: -8px; right: -8px;
+            background: var(--danger); color: white; border: none;
+            width: 24px; height: 24px; border-radius: 50%;
+            cursor: pointer; font-size: 0.7rem; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: var(--shadow);
+        }
+
         .toast-wrap { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 400; display: flex; flex-direction: column; gap: 0.4rem; max-width: 380px; }
         .toast-msg { background: var(--white); border-left: 3px solid var(--gold); padding: 0.75rem 1rem; border-radius: 6px; box-shadow: var(--shadow-lg); font-size: 0.8rem; font-weight: 500; animation: slideIn 0.3s ease; }
         .toast-msg.error { border-left-color: var(--danger); }
         .toast-msg.warning { border-left-color: var(--warning); }
         @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        .notification-banner {
-            position: fixed; top: 80px; right: 20px; z-index: 200;
-            background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; padding: 1rem 1.5rem;
-            border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);
-            display: none; align-items: flex-start; gap: 0.75rem;
-            border-left: 4px solid var(--gold); max-width: 420px;
-            animation: slideIn 0.3s ease;
-        }
-        .notification-banner.show { display: flex; }
-        .notification-banner i { font-size: 1.4rem; margin-top: 2px; }
-        .notification-banner .close-notif { cursor: pointer; margin-left: auto; opacity: 0.7; font-size: 0.9rem; flex-shrink: 0; }
-        .notification-banner .close-notif:hover { opacity: 1; }
-        .notification-banner strong { font-weight: 700; display: block; }
-        .notification-banner p { font-size: 0.8rem; opacity: 0.95; margin-top: 2px; line-height: 1.4; }
-        .notification-banner .low-items { margin-top: 4px; }
-        .notification-banner .low-item { font-size: 0.75rem; opacity: 0.9; padding: 2px 0; }
-
         .empty-state { grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: var(--radius-lg); color: var(--text-muted); }
         .empty-state i { font-size: 3rem; display: block; margin-bottom: 1rem; color: var(--gold); }
+
+        .bc-link { color: var(--gold-dark); cursor: pointer; font-weight: 500; }
+        .bc-link:hover { text-decoration: underline; }
 
         @media (max-width: 1200px) {
             .stat-row { grid-template-columns: repeat(2, 1fr); }
@@ -234,30 +258,18 @@
         @media (max-width: 480px) {
             .prod-row { grid-template-columns: 1fr; }
             .cat-row { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-
-<!-- Notification Banner for Low Stock -->
-<div class="notification-banner" id="notifBanner">
-    <i class="fas fa-exclamation-triangle"></i>
-    <div style="flex:1;">
-        <strong id="notifTitle">⚠️ Low Stock Alert</strong>
-        <div id="notifMessage">
-            <p>Some products are running low</p>
-            <div class="low-items" id="lowItemsList"></div>
-        </div>
-    </div>
-    <span class="close-notif" onclick="document.getElementById('notifBanner').classList.remove('show')"><i class="fas fa-times"></i></span>
-</div>
 
 <!-- Sidebar -->
 <aside class="sidebar">
     <div class="sidebar-brand">
         <div class="brand-icon"><i class="fas fa-warehouse"></i></div>
         <div class="brand-text">
-            <h2>Inventory Pro</h2>
+            <h2>FREERAMSIL INVENTORY</h2>
             <span>Asset Management</span>
         </div>
     </div>
@@ -269,9 +281,8 @@
         <div class="nav-section">Management</div>
         <div class="nav-link" data-view="checkouts"><i class="fas fa-clipboard-list"></i> Checked Out <span class="nav-badge" id="coBadge">0</span></div>
         <div class="nav-link" data-view="activity"><i class="fas fa-history"></i> Activity Log</div>
-        <div class="nav-section">Pages</div>
-        <div class="nav-link" data-page="analysis"><i class="fas fa-chart-bar"></i> Analysis</div>
-        <div class="nav-link" data-page="settings"><i class="fas fa-cog"></i> Settings</div>
+        <div class="nav-section">Tools</div>
+        <div class="nav-link" data-view="import"><i class="fas fa-file-import"></i> Import / Export</div>
     </nav>
     <div class="sidebar-footer">
         <div class="user-row">
@@ -315,9 +326,17 @@
         <div class="view-panel" id="inventoryPanel">
             <div class="section-head">
                 <h3>All Products</h3>
-                <select id="invFilter" style="padding:0.4rem 0.7rem;border:1px solid var(--gold-border);border-radius:6px;font-size:0.8rem;background:var(--gold-bg);" onchange="renderInventory()">
-                    <option value="all">All Categories</option>
-                </select>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <select id="invFilter" style="padding:0.4rem 0.7rem;border:1px solid var(--gold-border);border-radius:6px;font-size:0.8rem;background:var(--gold-bg);" onchange="renderInventory()">
+                        <option value="all">All Categories</option>
+                    </select>
+                    <select id="invSort" style="padding:0.4rem 0.7rem;border:1px solid var(--gold-border);border-radius:6px;font-size:0.8rem;background:var(--gold-bg);" onchange="renderInventory()">
+                        <option value="name">Sort: Name</option>
+                        <option value="quantity-asc">Sort: Quantity ↑</option>
+                        <option value="quantity-desc">Sort: Quantity ↓</option>
+                        <option value="newest">Sort: Newest</option>
+                    </select>
+                </div>
             </div>
             <div class="prod-row" id="invGrid"></div>
         </div>
@@ -325,7 +344,7 @@
         <!-- Category Detail View -->
         <div class="view-panel" id="categoryPanel">
             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;font-size:0.8rem;padding:0.5rem 0.75rem;background:var(--gold-bg);border-radius:var(--radius);border:1px solid var(--gold-border);">
-                <span class="bc-link" onclick="navigate('dashboard')" style="color:var(--gold-dark);cursor:pointer;font-weight:500;">Dashboard</span>
+                <span class="bc-link" onclick="navigate('dashboard')">Dashboard</span>
                 <i class="fas fa-chevron-right" style="font-size:0.5rem;color:var(--text-muted);"></i>
                 <span class="bc-current" id="bcCat" style="font-weight:600;"></span>
             </div>
@@ -344,7 +363,7 @@
         <div class="view-panel" id="checkoutsPanel">
             <div class="section-head">
                 <h3>Checked Out Items</h3>
-                <button class="btn btn-outline btn-sm" onclick="exportCSV()"><i class="fas fa-download"></i> Export</button>
+                <button class="btn btn-outline btn-sm" onclick="exportCSV()"><i class="fas fa-download"></i> Export CSV</button>
             </div>
             <div class="table-wrap">
                 <table>
@@ -356,7 +375,7 @@
 
         <!-- Low Stock View -->
         <div class="view-panel" id="lowstockPanel">
-            <div class="section-head"><h3>Low Stock Items</h3></div>
+            <div class="section-head"><h3>Low Stock Items (≤5 units)</h3></div>
             <div class="prod-row" id="lsGrid"></div>
         </div>
 
@@ -373,6 +392,25 @@
                 </table>
             </div>
         </div>
+
+        <!-- Import/Export View -->
+        <div class="view-panel" id="importPanel">
+            <div class="section-head"><h3>Import & Export Data</h3></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+                <div class="stat-box">
+                    <h4 style="margin-bottom:0.5rem;"><i class="fas fa-file-import" style="color:var(--gold);"></i> Import Products</h4>
+                    <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.75rem;">Upload a JSON file to bulk import products</p>
+                    <input type="file" id="importFile" accept=".json" style="margin-bottom:0.5rem;">
+                    <button class="btn btn-primary btn-sm" onclick="importJSON()">Import</button>
+                </div>
+                <div class="stat-box">
+                    <h4 style="margin-bottom:0.5rem;"><i class="fas fa-file-export" style="color:var(--gold);"></i> Export Products</h4>
+                    <p style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:0.75rem;">Download all products as JSON</p>
+                    <button class="btn btn-outline btn-sm" onclick="exportJSON()"><i class="fas fa-download"></i> Export JSON</button>
+                    <button class="btn btn-outline btn-sm" onclick="exportAllCSV()" style="margin-left:0.5rem;"><i class="fas fa-table"></i> Export CSV</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -385,20 +423,34 @@
         </div>
         <div class="modal-body">
             <form id="productForm"><input type="hidden" id="prodEditId">
-                <div class="form-group"><label>Name <span class="req">*</span></label><input type="text" id="prodName" required></div>
+                <div class="form-group"><label>Name <span class="req">*</span></label><input type="text" id="prodName" required placeholder="e.g. Dell XPS Laptop"></div>
                 <div class="form-row">
                     <div class="form-group"><label>Category <span class="req">*</span></label><select id="prodCat" required></select></div>
-                    <div class="form-group"><label>SKU <span class="req">*</span></label><input type="text" id="prodSku" required></div>
+                    <div class="form-group"><label>SKU <span class="req">*</span></label><input type="text" id="prodSku" required placeholder="SKU-0001"></div>
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label>Quantity <span class="req">*</span></label><input type="number" id="prodQty" min="0" value="1" required></div>
-                    <div class="form-group"><label>Location</label><input type="text" id="prodLoc" placeholder="Store room"></div>
+                    <div class="form-group"><label>Min Stock Alert</label><input type="number" id="prodMinStock" min="1" value="5"></div>
                 </div>
-                <div class="form-group"><label>Image URL</label><input type="text" id="prodImg" placeholder="https://images.unsplash.com/..."></div>
-                <div class="form-group"><label>Description</label><textarea id="prodDesc" rows="2"></textarea></div>
+                <div class="form-group"><label>Location</label><input type="text" id="prodLoc" placeholder="e.g. Warehouse A, Shelf 3"></div>
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="hidden" id="prodImgData" value="">
+                    <div class="image-upload-area" id="imageUploadArea" onclick="document.getElementById('imageFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div class="upload-text">Click or drag & drop image here</div>
+                        <div class="upload-hint">JPG, PNG, GIF, WebP (Max 5MB)</div>
+                        <div class="image-preview-container" id="imagePreviewContainer" style="display:none;">
+                            <img id="imagePreview" src="" alt="Preview">
+                            <button type="button" class="remove-image-btn" onclick="event.stopPropagation();removeImage()"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <input type="file" id="imageFileInput" accept="image/*" style="display:none;" onchange="handleImageSelect(event)">
+                </div>
+                <div class="form-group"><label>Description</label><textarea id="prodDesc" rows="2" placeholder="Product description..."></textarea></div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal('productModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
                 </div>
             </form>
         </div>
@@ -409,7 +461,7 @@
 <div class="modal-overlay" id="checkoutModal">
     <div class="modal-box">
         <div class="modal-head">
-            <h3><i class="fas fa-sign-out-alt" style="color:var(--gold);"></i> Check Out</h3>
+            <h3><i class="fas fa-sign-out-alt" style="color:var(--gold);"></i> Check Out Item</h3>
             <button class="modal-close-btn" onclick="closeModal('checkoutModal')"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -417,11 +469,11 @@
             <form id="checkoutForm"><input type="hidden" id="coProdId">
                 <div class="form-row">
                     <div class="form-group"><label>Destination <span class="req">*</span></label><select id="coLoc" required><option value="">Select...</option><option>HQ - Main Office</option><option>Branch Office A</option><option>Branch Office B</option><option>Warehouse</option><option>Field Site</option><option>Other</option></select></div>
-                    <div class="form-group"><label>Ref Number <span class="req">*</span></label><input type="text" id="coRef" required></div>
+                    <div class="form-group"><label>Ref Number <span class="req">*</span></label><input type="text" id="coRef" required placeholder="e.g. WO-2024-001"></div>
                 </div>
-                <div class="form-group"><label>Assigned To</label><input type="text" id="coAssignee"></div>
+                <div class="form-group"><label>Assigned To</label><input type="text" id="coAssignee" placeholder="Person receiving item"></div>
                 <div class="form-group"><label>Department</label><select id="coDept"><option value="">Select...</option><option>IT</option><option>Operations</option><option>Finance</option><option>HR</option><option>Marketing</option><option>Sales</option><option>Admin</option></select></div>
-                <div class="form-group"><label>Notes</label><textarea id="coNotes" rows="2"></textarea></div>
+                <div class="form-group"><label>Notes</label><textarea id="coNotes" rows="2" placeholder="Any additional notes..."></textarea></div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal('checkoutModal')">Cancel</button>
                     <button type="submit" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Check Out</button>
@@ -435,7 +487,7 @@
 <div class="modal-overlay" id="restockModal">
     <div class="modal-box">
         <div class="modal-head">
-            <h3><i class="fas fa-boxes" style="color:var(--gold);"></i> Restock</h3>
+            <h3><i class="fas fa-boxes" style="color:var(--gold);"></i> Restock Product</h3>
             <button class="modal-close-btn" onclick="closeModal('restockModal')"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -444,12 +496,12 @@
                 <div class="summary-box" id="rsPreview" style="display:none;"></div>
                 <div class="form-row">
                     <div class="form-group"><label>Qty to Add <span class="req">*</span></label><input type="number" id="rsQty" min="1" value="1" required></div>
-                    <div class="form-group"><label>Source</label><input type="text" id="rsSource" placeholder="Supplier"></div>
+                    <div class="form-group"><label>Source</label><input type="text" id="rsSource" placeholder="Supplier name"></div>
                 </div>
-                <div class="form-group"><label>Notes</label><textarea id="rsNotes" rows="2"></textarea></div>
+                <div class="form-group"><label>Notes</label><textarea id="rsNotes" rows="2" placeholder="Restock notes..."></textarea></div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-outline" onclick="closeModal('restockModal')">Cancel</button>
-                    <button type="submit" class="btn btn-success"><i class="fas fa-plus-circle"></i> Restock</button>
+                    <button type="submit" class="btn btn-success"><i class="fas fa-plus-circle"></i> Confirm Restock</button>
                 </div>
             </form>
         </div>
@@ -461,13 +513,14 @@
 
 <script>
 // =============================================
-// DATA STORE (LOCAL STORAGE)
+// DATA STORE
 // =============================================
 let products = [];
 let checkouts = [];
 let activities = [];
 let currentView = 'dashboard';
 let currentCategory = null;
+let currentImageData = null;
 
 const CATS = ['IT Equipment','Office Supplies','Furniture','Tools & Equipment','Consumables'];
 const CAT_ICONS = {
@@ -492,53 +545,8 @@ const CAT_BG = {
     'Consumables':'#fef2f2'
 };
 
-// Google Images URLs for products
-const PRODUCT_IMAGES = {
-    'Laptop': 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300',
-    'Monitor': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300',
-    'Keyboard': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=300',
-    'Mouse': 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300',
-    'Printer': 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=300',
-    'Router': 'https://images.unsplash.com/photo-1558002038-1055907df827?w=300',
-    'Switch': 'https://images.unsplash.com/photo-1544198365-f5d60b6d8190?w=300',
-    'Paper': 'https://images.unsplash.com/photo-1567200722007-a8f633043c81?w=300',
-    'Pens': 'https://images.unsplash.com/photo-1583484968992-44f6a50b9f82?w=300',
-    'Notebooks': 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300',
-    'Stapler': 'https://images.unsplash.com/photo-1586953208448-b3a8d1eb7bfa?w=300',
-    'Tape': 'https://images.unsplash.com/photo-1586953208448-b3a8d1eb7bfa?w=300',
-    'Envelopes': 'https://images.unsplash.com/photo-1586953208448-b3a8d1eb7bfa?w=300',
-    'Folders': 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300',
-    'Desk': 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300',
-    'Chair': 'https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=300',
-    'Bookshelf': 'https://images.unsplash.com/photo-1595878718540-48bdf7ee6796?w=300',
-    'Cabinet': 'https://images.unsplash.com/photo-1597072689227-8882273e8f6a?w=300',
-    'Table': 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300',
-    'Lamp': 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300',
-    'Shelf': 'https://images.unsplash.com/photo-1595878718540-48bdf7ee6796?w=300',
-    'Drill': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Hammer': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Screwdriver': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Wrench': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Saw': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Pliers': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Level': 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=300',
-    'Paper Towels': 'https://images.unsplash.com/photo-1584735935682-2f2b69d0a3f7?w=300',
-    'Coffee': 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=300',
-    'Water': 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=300',
-    'Snacks': 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=300',
-    'Cleaning Supplies': 'https://images.unsplash.com/photo-1584735935682-2f2b69d0a3f7?w=300',
-    'Batteries': 'https://images.unsplash.com/photo-1586953208448-b3a8d1eb7bfa?w=300'
-};
-
 // =============================================
-// USER INFO
-// =============================================
-const currentUser = JSON.parse(localStorage.getItem('inventory_user') || '{"username":"Admin","role":"Administrator"}');
-document.getElementById('sidebarUserName').textContent = currentUser.username || 'Admin';
-document.getElementById('sidebarUserRole').textContent = currentUser.role || 'Administrator';
-
-// =============================================
-// GENERATE 50+ REALISTIC PRODUCTS
+// GENERATE DEFAULT PRODUCTS (NO ONLINE IMAGES)
 // =============================================
 function generateDefaultProducts() {
     const demo = [];
@@ -552,20 +560,20 @@ function generateDefaultProducts() {
             { name: 'Netgear Router', qty: 34, loc: 'Warehouse B' },
             { name: 'Cisco Switch', qty: 8, loc: 'Server Room' },
             { name: 'Apple MacBook Pro', qty: 22, loc: 'Warehouse A' },
-            { name: 'Samsung SSD', qty: 56, loc: 'Store Room 2' },
-            { name: 'Asus Monitor', qty: 19, loc: 'Warehouse B' }
+            { name: 'Samsung SSD 1TB', qty: 56, loc: 'Store Room 2' },
+            { name: 'Asus Monitor 24"', qty: 19, loc: 'Warehouse B' }
         ],
         'Office Supplies': [
-            { name: 'A4 Paper', qty: 120, loc: 'Store Room 1' },
-            { name: 'Pilot Pens', qty: 200, loc: 'Store Room 1' },
+            { name: 'A4 Paper Ream', qty: 120, loc: 'Store Room 1' },
+            { name: 'Pilot Pens Box', qty: 200, loc: 'Store Room 1' },
             { name: 'Leather Notebooks', qty: 85, loc: 'Store Room 2' },
             { name: 'Heavy Duty Stapler', qty: 42, loc: 'Store Room 1' },
-            { name: 'Packing Tape', qty: 95, loc: 'Store Room 2' },
-            { name: 'A5 Envelopes', qty: 110, loc: 'Store Room 1' },
+            { name: 'Packing Tape Roll', qty: 95, loc: 'Store Room 2' },
+            { name: 'A5 Envelopes Pack', qty: 110, loc: 'Store Room 1' },
             { name: 'Hanging Folders', qty: 78, loc: 'Store Room 2' },
             { name: 'Whiteboard Markers', qty: 65, loc: 'Store Room 1' },
             { name: 'Desk Organizer', qty: 38, loc: 'Store Room 2' },
-            { name: 'Paper Clips', qty: 150, loc: 'Store Room 1' }
+            { name: 'Paper Clips Box', qty: 150, loc: 'Store Room 1' }
         ],
         'Furniture': [
             { name: 'Ergonomic Desk', qty: 15, loc: 'Warehouse A' },
@@ -580,28 +588,28 @@ function generateDefaultProducts() {
             { name: 'Storage Rack', qty: 25, loc: 'Warehouse B' }
         ],
         'Tools & Equipment': [
-            { name: 'Power Drill', qty: 24, loc: 'Workshop' },
+            { name: 'Power Drill 18V', qty: 24, loc: 'Workshop' },
             { name: 'Claw Hammer', qty: 38, loc: 'Workshop' },
             { name: 'Screwdriver Set', qty: 45, loc: 'Workshop' },
             { name: 'Adjustable Wrench', qty: 30, loc: 'Workshop' },
             { name: 'Hand Saw', qty: 18, loc: 'Workshop' },
             { name: 'Combination Pliers', qty: 42, loc: 'Workshop' },
-            { name: 'Spirit Level', qty: 15, loc: 'Workshop' },
+            { name: 'Spirit Level 24"', qty: 15, loc: 'Workshop' },
             { name: 'Utility Knife', qty: 55, loc: 'Workshop' },
             { name: 'Tool Box Set', qty: 20, loc: 'Workshop' },
             { name: 'Measuring Tape', qty: 60, loc: 'Workshop' }
         ],
         'Consumables': [
-            { name: 'Paper Towels', qty: 200, loc: 'Store Room 2' },
-            { name: 'Coffee Beans', qty: 85, loc: 'Kitchen' },
-            { name: 'Bottled Water', qty: 120, loc: 'Kitchen' },
-            { name: 'Snack Packs', qty: 95, loc: 'Kitchen' },
-            { name: 'Cleaning Supplies', qty: 75, loc: 'Store Room 2' },
-            { name: 'AA Batteries', qty: 150, loc: 'Store Room 2' },
-            { name: 'Hand Sanitizer', qty: 60, loc: 'Store Room 2' },
-            { name: 'Trash Bags', qty: 110, loc: 'Store Room 2' },
-            { name: 'Paper Cups', qty: 200, loc: 'Kitchen' },
-            { name: 'Plastic Cutlery', qty: 180, loc: 'Kitchen' }
+            { name: 'Paper Towels Pack', qty: 200, loc: 'Store Room 2' },
+            { name: 'Coffee Beans 1kg', qty: 85, loc: 'Kitchen' },
+            { name: 'Bottled Water 24pk', qty: 120, loc: 'Kitchen' },
+            { name: 'Snack Packs Box', qty: 95, loc: 'Kitchen' },
+            { name: 'Cleaning Supplies Kit', qty: 75, loc: 'Store Room 2' },
+            { name: 'AA Batteries Pack', qty: 150, loc: 'Store Room 2' },
+            { name: 'Hand Sanitizer 500ml', qty: 60, loc: 'Store Room 2' },
+            { name: 'Trash Bags Roll', qty: 110, loc: 'Store Room 2' },
+            { name: 'Paper Cups 100pk', qty: 200, loc: 'Kitchen' },
+            { name: 'Plastic Cutlery Set', qty: 180, loc: 'Kitchen' }
         ]
     };
 
@@ -610,8 +618,6 @@ function generateDefaultProducts() {
         const items = productData[cat] || [];
         for (let item of items) {
             const sku = `SKU-${String(id).padStart(4, '0')}`;
-            const imgKey = item.name.split(' ').slice(-1)[0];
-            const imageUrl = PRODUCT_IMAGES[item.name] || PRODUCT_IMAGES[imgKey] || `https://images.unsplash.com/photo-1586953208448-b3a8d1eb7bfa?w=300&random=${id}`;
             demo.push({
                 id: sku,
                 name: item.name,
@@ -619,8 +625,8 @@ function generateDefaultProducts() {
                 category: cat,
                 quantity: item.qty,
                 location: item.loc,
-                image_url: imageUrl,
-                description: `${item.name} for ${cat} use`,
+                image_data: null, // No default image
+                description: `${item.name} for ${cat} department`,
                 min_stock: 5,
                 created_at: new Date().toISOString()
             });
@@ -651,13 +657,16 @@ function loadData() {
     
     updateBadges();
     renderCurrentView();
-    checkLowStockAlert();
 }
 
 function saveProducts() {
-    localStorage.setItem('inventory_products', JSON.stringify(products));
+    // Clean up large image data if needed
+    const cleaned = products.map(p => ({
+        ...p,
+        image_data: p.image_data && p.image_data.length > 500000 ? p.image_data.substring(0, 500000) : p.image_data
+    }));
+    localStorage.setItem('inventory_products', JSON.stringify(cleaned));
     updateBadges();
-    checkLowStockAlert();
 }
 
 function saveCheckouts() {
@@ -682,68 +691,73 @@ function updateBadges() {
 }
 
 // =============================================
-// LOW STOCK NOTIFICATION - CHECKS EACH PRODUCT
+// IMAGE HANDLING
 // =============================================
-function checkLowStockAlert() {
-    // Find all products with quantity <= 5 (but > 0)
-    const lowItems = products.filter(p => p.quantity <= 5 && p.quantity > 0);
-    const outItems = products.filter(p => p.quantity === 0);
-    
-    // Group by category for better display
-    const lowByCategory = {};
-    lowItems.forEach(p => {
-        if (!lowByCategory[p.category]) lowByCategory[p.category] = [];
-        lowByCategory[p.category].push(p);
-    });
-    
-    const hasLow = lowItems.length > 0 || outItems.length > 0;
-    const banner = document.getElementById('notifBanner');
-    
-    if (hasLow) {
-        let message = '';
-        let itemList = '';
-        
-        if (lowItems.length > 0) {
-            message += `${lowItems.length} product${lowItems.length > 1 ? 's' : ''} low on stock`;
-            
-            // List items by category
-            for (const [cat, items] of Object.entries(lowByCategory)) {
-                itemList += `<div style="margin-top:3px;"><strong>${cat}:</strong> `;
-                itemList += items.map(p => `${p.name} (${p.quantity} left)`).join(', ');
-                itemList += '</div>';
-            }
-        }
-        
-        if (outItems.length > 0) {
-            message += ` • ${outItems.length} out of stock`;
-            const outNames = outItems.map(p => p.name).slice(0, 3).join(', ');
-            if (outItems.length > 3) {
-                itemList += `<div style="margin-top:3px;color: #fca5a5;"><strong>Out of stock:</strong> ${outNames} +${outItems.length - 3} more</div>`;
-            } else if (outItems.length > 0) {
-                itemList += `<div style="margin-top:3px;color: #fca5a5;"><strong>Out of stock:</strong> ${outNames}</div>`;
-            }
-        }
-        
-        document.getElementById('notifTitle').textContent = `⚠️ Low Stock Alert (${lowItems.length + outItems.length} items)`;
-        document.getElementById('notifMessage').innerHTML = `
-            <p>${message}</p>
-            <div class="low-items">${itemList}</div>
-        `;
-        banner.classList.add('show');
-        
-        // Also show toast notification for immediate visibility
-        if (lowItems.length > 0) {
-            const topLow = lowItems.slice(0, 3).map(p => `${p.name} (${p.quantity})`).join(', ');
-            toast(`⚠️ Low stock: ${topLow}${lowItems.length > 3 ? ` +${lowItems.length - 3} more` : ''}`, 'warning');
-        }
-        if (outItems.length > 0) {
-            toast(`🚫 ${outItems.length} item${outItems.length > 1 ? 's' : ''} out of stock!`, 'error');
-        }
-    } else {
-        banner.classList.remove('show');
+function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    processImageFile(file);
+}
+
+function processImageFile(file) {
+    if (!file.type.startsWith('image/')) {
+        toast('Please select an image file', 'error');
+        return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+        toast('Image must be less than 5MB', 'error');
+        return;
     }
     
-    document.getElementById('lsBadge').textContent = products.filter(p => p.quantity > 0 && p.quantity <= 5).length;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        currentImageData = e.target.result;
+        document.getElementById('prodImgData').value = currentImageData;
+        document.getElementById('imagePreview').src = currentImageData;
+        document.getElementById('imagePreviewContainer').style.display = 'inline-block';
+        document.getElementById('imageUploadArea').querySelector('.upload-text').textContent = file.name;
+        document.getElementById('imageUploadArea').querySelector('.upload-hint').textContent = 
+            `${(file.size / 1024).toFixed(1)} KB - Click to change`;
+    };
+    reader.readAsDataURL(file);
+}
+
+function removeImage() {
+    currentImageData = null;
+    document.getElementById('prodImgData').value = '';
+    document.getElementById('imagePreviewContainer').style.display = 'none';
+    document.getElementById('imagePreview').src = '';
+    document.getElementById('imageFileInput').value = '';
+    document.getElementById('imageUploadArea').querySelector('.upload-text').textContent = 'Click or drag & drop image here';
+    document.getElementById('imageUploadArea').querySelector('.upload-hint').textContent = 'JPG, PNG, GIF, WebP (Max 5MB)';
+}
+
+// Drag and drop setup
+function setupDragAndDrop() {
+    const uploadArea = document.getElementById('imageUploadArea');
+    
+    uploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.add('drag-over');
+    });
+    
+    uploadArea.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('drag-over');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove('drag-over');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            processImageFile(files[0]);
+        }
+    });
 }
 
 // =============================================
@@ -756,19 +770,13 @@ function navigate(view, cat) {
     document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
 
-    const pages = { 'analysis': '#', 'settings': '#' };
-    if (pages[view]) {
-        document.querySelector(`[data-page="${view}"]`)?.classList.add('active');
-        toast('Coming soon: ' + view, 'warning');
-        return;
-    }
-
     const views = {
         'dashboard': ['dashboardPanel', 'Dashboard', 'Real-time inventory overview'],
         'inventory': ['inventoryPanel', 'All Inventory', 'Complete product listing'],
         'checkouts': ['checkoutsPanel', 'Checked Out', 'Currently assigned items'],
         'lowstock': ['lowstockPanel', 'Low Stock', 'Items below threshold'],
         'activity': ['activityPanel', 'Activity Log', 'Recent actions'],
+        'import': ['importPanel', 'Import / Export', 'Data management tools'],
     };
 
     if (view === 'category' && cat) {
@@ -795,7 +803,8 @@ function renderCurrentView() {
         'checkouts': renderCheckouts,
         'lowstock': renderLowStock,
         'activity': renderActivity,
-        'category': renderCategory
+        'category': renderCategory,
+        'import': () => {} // Static view
     };
     if (renderers[currentView]) renderers[currentView]();
 }
@@ -807,12 +816,13 @@ function renderDashboard() {
     const totalQty = products.reduce((s,p) => s + p.quantity, 0);
     const low = products.filter(p => p.quantity > 0 && p.quantity <= 5).length;
     const out = products.filter(p => p.quantity === 0).length;
+    const totalValue = products.length * 100; // Placeholder value
 
     document.getElementById('statRow').innerHTML = `
-        <div class="stat-box"><div class="stat-icon-sm gold" style="margin-bottom:0.5rem;"><i class="fas fa-boxes"></i></div><div class="stat-num">${products.length}</div><div class="stat-label">Total Products</div></div>
-        <div class="stat-box"><div class="stat-icon-sm green" style="margin-bottom:0.5rem;"><i class="fas fa-cubes"></i></div><div class="stat-num">${totalQty}</div><div class="stat-label">Items In Stock</div></div>
-        <div class="stat-box"><div class="stat-icon-sm amber" style="margin-bottom:0.5rem;"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-num">${low}</div><div class="stat-label">Low Stock (${out} out)</div></div>
-        <div class="stat-box"><div class="stat-icon-sm cyan" style="margin-bottom:0.5rem;"><i class="fas fa-clipboard-list"></i></div><div class="stat-num">${checkouts.length}</div><div class="stat-label">Checked Out</div></div>`;
+        <div class="stat-box"><div class="stat-icon-sm gold"><i class="fas fa-boxes"></i></div><div class="stat-num">${products.length}</div><div class="stat-label">Total Products</div></div>
+        <div class="stat-box"><div class="stat-icon-sm green"><i class="fas fa-cubes"></i></div><div class="stat-num">${totalQty.toLocaleString()}</div><div class="stat-label">Items In Stock</div></div>
+        <div class="stat-box"><div class="stat-icon-sm amber"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-num">${low}</div><div class="stat-label">Low Stock (${out} out)</div></div>
+        <div class="stat-box"><div class="stat-icon-sm cyan"><i class="fas fa-clipboard-list"></i></div><div class="stat-num">${checkouts.length}</div><div class="stat-label">Checked Out</div></div>`;
 
     document.getElementById('catRow').innerHTML = CATS.map(cat => {
         const cnt = products.filter(p => p.category === cat).length;
@@ -836,9 +846,26 @@ function renderDashboard() {
 // =============================================
 function renderInventory() {
     const filter = document.getElementById('invFilter')?.value || 'all';
+    const sort = document.getElementById('invSort')?.value || 'name';
     const filterSelect = document.getElementById('invFilter');
     filterSelect.innerHTML = '<option value="all">All Categories</option>' + CATS.map(c => `<option value="${c}" ${filter===c?'selected':''}>${c}</option>`).join('');
-    const list = filter === 'all' ? products : products.filter(p => p.category === filter);
+    
+    let list = filter === 'all' ? [...products] : products.filter(p => p.category === filter);
+    
+    // Sort
+    switch(sort) {
+        case 'quantity-asc':
+            list.sort((a,b) => a.quantity - b.quantity);
+            break;
+        case 'quantity-desc':
+            list.sort((a,b) => b.quantity - a.quantity);
+            break;
+        case 'newest':
+            list.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+            break;
+        default:
+            list.sort((a,b) => a.name.localeCompare(b.name));
+    }
     
     if (list.length === 0) {
         document.getElementById('invGrid').innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No products found in this category</p></div>`;
@@ -874,7 +901,6 @@ function renderCategory() {
         return;
     }
     document.getElementById('catProdGrid').innerHTML = catProds.map(p => productCard(p)).join('');
-    document.getElementById('rsProd').innerHTML = '<option value="">Choose product...</option>' + catProds.map(p => `<option value="${p.id}">${p.name} (${p.sku}) - Qty: ${p.quantity}</option>`).join('');
 }
 
 // =============================================
@@ -882,14 +908,28 @@ function renderCategory() {
 // =============================================
 function productCard(p) {
     const stockClass = p.quantity > 5 ? 'pill-good' : (p.quantity > 0 ? 'pill-low' : 'pill-out');
-    const stockLabel = p.quantity > 5 ? `${p.quantity}` : (p.quantity > 0 ? `⚠️ ${p.quantity}` : 'Out');
-    const img = p.image_url ? `<img src="${p.image_url}" alt="${p.name}" loading="lazy">` : `<div class="no-img"><i class="fas fa-box"></i></div>`;
-    return `<div class="prod-card" onclick="startCheckout('${p.id}')">
-        <div class="prod-img">${img}</div>
+    const stockLabel = p.quantity > 5 ? `${p.quantity} in stock` : (p.quantity > 0 ? `⚠️ Only ${p.quantity}` : 'Out of stock');
+    const imgContent = p.image_data 
+        ? `<img src="${p.image_data}" alt="${p.name}" loading="lazy">`
+        : `<div class="placeholder-icon"><i class="fas fa-image"></i></div>`;
+    
+    return `<div class="prod-card">
+        <div class="prod-img" onclick="openEditProduct('${p.id}')">
+            ${imgContent}
+            <div class="img-overlay"><i class="fas fa-edit"></i> Click to edit</div>
+        </div>
         <div class="prod-body">
-            <div class="prod-name">${p.name}</div>
-            <div class="prod-sku">${p.sku} · ${p.location||'—'}</div>
+            <div class="prod-name" onclick="startCheckout('${p.id}')" title="Click to checkout">${p.name}</div>
+            <div class="prod-sku">${p.sku}</div>
+            <div class="prod-meta">
+                <span class="prod-location"><i class="fas fa-map-marker-alt"></i> ${p.location||'No location'}</span>
+            </div>
             <span class="pill ${stockClass}">${stockLabel}</span>
+        </div>
+        <div class="prod-actions">
+            <button class="btn btn-success btn-xs" onclick="event.stopPropagation();openRestockForProduct('${p.id}')" title="Restock"><i class="fas fa-plus-circle"></i> Restock</button>
+            <button class="btn btn-outline btn-xs" onclick="event.stopPropagation();openEditProduct('${p.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-danger btn-xs" onclick="event.stopPropagation();deleteProduct('${p.id}')" title="Delete"><i class="fas fa-trash"></i></button>
         </div>
     </div>`;
 }
@@ -907,7 +947,7 @@ function renderCheckouts() {
             <td>${c.refNumber}</td>
             <td>${c.assignedTo||'—'}</td>
             <td>${new Date(c.checkedOutAt).toLocaleDateString()}</td>
-            <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation();doReturn('${c.id}')"><i class="fas fa-undo"></i></button></td>
+            <td><button class="btn btn-success btn-sm" onclick="event.stopPropagation();doReturn('${c.id}')"><i class="fas fa-undo"></i> Return</button></td>
         </tr>`).join('') :
         '<tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">No items checked out</td></tr>';
 }
@@ -926,6 +966,68 @@ function renderActivity() {
 }
 
 // =============================================
+// RESTOCK OPERATIONS
+// =============================================
+function openRestockForProduct(pid) {
+    const p = products.find(x => x.id === pid);
+    if (!p) return;
+    
+    const select = document.getElementById('rsProd');
+    select.innerHTML = '<option value="">Choose product...</option>' + 
+        products.map(pr => `<option value="${pr.id}" ${pr.id === pid ? 'selected' : ''}>${pr.name} (${pr.sku}) - Qty: ${pr.quantity}</option>`).join('');
+    
+    document.getElementById('rsQty').value = 1;
+    document.getElementById('rsSource').value = '';
+    document.getElementById('rsNotes').value = '';
+    previewRestock();
+    openModal('restockModal');
+}
+
+function openRestockForm() {
+    const catProds = currentCategory ? products.filter(p => p.category === currentCategory) : products;
+    document.getElementById('rsProd').innerHTML = '<option value="">Choose product...</option>' + 
+        catProds.map(p => `<option value="${p.id}">${p.name} (${p.sku}) - Qty: ${p.quantity}</option>`).join('');
+    document.getElementById('restockForm').reset();
+    document.getElementById('rsPreview').style.display = 'none';
+    openModal('restockModal');
+}
+
+function previewRestock() {
+    const p = products.find(x => x.id === document.getElementById('rsProd').value);
+    const prev = document.getElementById('rsPreview');
+    if (p) {
+        prev.style.display = 'block';
+        prev.innerHTML = `<strong>${p.name}</strong><br><small>SKU: ${p.sku} · Current stock: ${p.quantity} · After restock: ${p.quantity + (parseInt(document.getElementById('rsQty').value)||0)}</small>`;
+    } else {
+        prev.style.display = 'none';
+    }
+}
+
+function doRestock(e) {
+    e.preventDefault();
+    const pid = document.getElementById('rsProd').value;
+    const qty = parseInt(document.getElementById('rsQty').value) || 0;
+    const source = document.getElementById('rsSource').value.trim() || 'supplier';
+    const notes = document.getElementById('rsNotes').value.trim();
+    
+    if (!pid) { toast('Please select a product','error'); return; }
+    if (qty < 1) { toast('Quantity must be at least 1','error'); return; }
+    
+    const idx = products.findIndex(x => x.id === pid);
+    if (idx !== -1) {
+        const oldQty = products[idx].quantity;
+        products[idx].quantity = oldQty + qty;
+        saveProducts();
+        addActivity('Restock', `${products[idx].name} restocked: ${oldQty} → ${products[idx].quantity} (+${qty}) from ${source}${notes ? ' - ' + notes : ''}`);
+        toast(`✅ Restocked ${products[idx].name} +${qty} units`);
+        closeModal('restockModal');
+        renderCurrentView();
+    } else {
+        toast('Product not found','error');
+    }
+}
+
+// =============================================
 // CHECKOUT OPERATIONS
 // =============================================
 function startCheckout(pid) {
@@ -933,7 +1035,7 @@ function startCheckout(pid) {
     if (!p) return;
     if (p.quantity <= 0) { toast('Out of stock','error'); return; }
     document.getElementById('coProdId').value = pid;
-    document.getElementById('coSummary').innerHTML = `<strong>${p.name}</strong><br><small>${p.sku} · ${p.category} · Stock: ${p.quantity}</small>`;
+    document.getElementById('coSummary').innerHTML = `<strong>${p.name}</strong><br><small>SKU: ${p.sku} · Category: ${p.category} · Available: ${p.quantity}</small>`;
     document.getElementById('checkoutForm').reset();
     openModal('checkoutModal');
 }
@@ -957,7 +1059,7 @@ function doCheckout(e) {
         notes: document.getElementById('coNotes').value.trim(),
         checkedOutAt: new Date().toISOString()
     };
-    if (!body.location || !body.refNumber) { toast('Fill required fields','error'); return; }
+    if (!body.location || !body.refNumber) { toast('Destination and Ref Number are required','error'); return; }
     
     const idx = products.findIndex(x => x.id === pid);
     if (idx !== -1) {
@@ -967,10 +1069,10 @@ function doCheckout(e) {
     
     checkouts.push(body);
     saveCheckouts();
-    addActivity('Checkout', `${p.name} (${p.sku}) checked out to ${body.location}`);
-    toast('Checked out successfully');
+    addActivity('Checkout', `${p.name} (${p.sku}) checked out to ${body.location} - Ref: ${body.refNumber}`);
+    toast('✅ Item checked out successfully');
     closeModal('checkoutModal');
-    loadData();
+    renderCurrentView();
 }
 
 function doReturn(cid) {
@@ -988,76 +1090,54 @@ function doReturn(cid) {
         checkouts = checkouts.filter(c => c.id !== cid);
         saveCheckouts();
         addActivity('Return', `${co.productName} returned from ${co.location}`);
-        toast('Item returned');
-        loadData();
-    }
-}
-
-// =============================================
-// RESTOCK
-// =============================================
-function openRestockForm() {
-    const catProds = currentCategory ? products.filter(p => p.category === currentCategory) : products;
-    document.getElementById('rsProd').innerHTML = '<option value="">Choose product...</option>' + catProds.map(p => `<option value="${p.id}">${p.name} (${p.sku}) - Qty: ${p.quantity}</option>`).join('');
-    document.getElementById('restockForm').reset();
-    document.getElementById('rsPreview').style.display = 'none';
-    openModal('restockModal');
-}
-
-function previewRestock() {
-    const p = products.find(x => x.id === document.getElementById('rsProd').value);
-    const prev = document.getElementById('rsPreview');
-    if (p) {
-        prev.style.display = 'block';
-        prev.innerHTML = `<strong>${p.name}</strong><br><small>${p.sku} · Current: ${p.quantity}</small>`;
-    } else {
-        prev.style.display = 'none';
-    }
-}
-
-function doRestock(e) {
-    e.preventDefault();
-    const pid = document.getElementById('rsProd').value;
-    const qty = parseInt(document.getElementById('rsQty').value) || 0;
-    if (!pid || qty < 1) { toast('Select product and quantity','error'); return; }
-    
-    const idx = products.findIndex(x => x.id === pid);
-    if (idx !== -1) {
-        products[idx].quantity = (products[idx].quantity || 0) + qty;
-        saveProducts();
-        addActivity('Restock', `${products[idx].name} restocked +${qty} units from ${document.getElementById('rsSource').value || 'supplier'}`);
-        toast(`Restocked ${qty} units`);
-        closeModal('restockModal');
-        loadData();
+        toast('Item returned to inventory');
+        renderCurrentView();
     }
 }
 
 // =============================================
 // PRODUCT FORM
 // =============================================
-function openProductForm(editId) {
-    document.getElementById('prodCat').innerHTML = '<option value="">Select...</option>' + CATS.map(c => `<option value="${c}">${c}</option>`).join('');
+function openProductForm() {
+    document.getElementById('prodCat').innerHTML = '<option value="">Select category...</option>' + CATS.map(c => `<option value="${c}">${c}</option>`).join('');
+    document.getElementById('prodModalTitle').textContent = 'New Product';
+    document.getElementById('productForm').reset();
+    document.getElementById('prodEditId').value = '';
+    document.getElementById('prodMinStock').value = 5;
+    document.getElementById('prodQty').value = 1;
+    if (currentCategory) document.getElementById('prodCat').value = currentCategory;
+    document.getElementById('prodSku').value = `SKU-${String(products.length + 1).padStart(4, '0')}`;
+    removeImage();
+    openModal('productModal');
+}
 
-    if (editId) {
-        const p = products.find(x => x.id === editId);
-        if (p) {
-            document.getElementById('prodModalTitle').textContent = 'Edit Product';
-            document.getElementById('prodEditId').value = p.id;
-            document.getElementById('prodName').value = p.name;
-            document.getElementById('prodSku').value = p.sku;
-            document.getElementById('prodCat').value = p.category;
-            document.getElementById('prodQty').value = p.quantity;
-            document.getElementById('prodLoc').value = p.location||'';
-            document.getElementById('prodImg').value = p.image_url||'';
-            document.getElementById('prodDesc').value = p.description||'';
-        }
+function openEditProduct(pid) {
+    const p = products.find(x => x.id === pid);
+    if (!p) return;
+    
+    document.getElementById('prodCat').innerHTML = '<option value="">Select category...</option>' + CATS.map(c => `<option value="${c}" ${c===p.category?'selected':''}>${c}</option>`).join('');
+    document.getElementById('prodModalTitle').textContent = 'Edit Product';
+    document.getElementById('prodEditId').value = p.id;
+    document.getElementById('prodName').value = p.name;
+    document.getElementById('prodSku').value = p.sku;
+    document.getElementById('prodCat').value = p.category;
+    document.getElementById('prodQty').value = p.quantity;
+    document.getElementById('prodMinStock').value = p.min_stock || 5;
+    document.getElementById('prodLoc').value = p.location||'';
+    document.getElementById('prodDesc').value = p.description||'';
+    
+    // Handle image
+    if (p.image_data) {
+        currentImageData = p.image_data;
+        document.getElementById('prodImgData').value = p.image_data;
+        document.getElementById('imagePreview').src = p.image_data;
+        document.getElementById('imagePreviewContainer').style.display = 'inline-block';
+        document.getElementById('imageUploadArea').querySelector('.upload-text').textContent = 'Current image - Click to change';
+        document.getElementById('imageUploadArea').querySelector('.upload-hint').textContent = 'Click or drop new image to replace';
     } else {
-        document.getElementById('prodModalTitle').textContent = 'New Product';
-        document.getElementById('productForm').reset();
-        document.getElementById('prodEditId').value = '';
-        if (currentCategory) document.getElementById('prodCat').value = currentCategory;
-        document.getElementById('prodSku').value = `SKU-${String(products.length + 1).padStart(4, '0')}`;
+        removeImage();
     }
+    
     openModal('productModal');
 }
 
@@ -1070,39 +1150,96 @@ function saveProduct(e) {
         sku: document.getElementById('prodSku').value.trim(),
         category: document.getElementById('prodCat').value,
         quantity: parseInt(document.getElementById('prodQty').value)||0,
+        min_stock: parseInt(document.getElementById('prodMinStock').value)||5,
         location: document.getElementById('prodLoc').value.trim(),
-        image_url: document.getElementById('prodImg').value.trim(),
+        image_data: currentImageData || null,
         description: document.getElementById('prodDesc').value.trim(),
-        min_stock: 5,
-        created_at: new Date().toISOString()
+        created_at: editId ? (products.find(p=>p.id===editId)?.created_at || new Date().toISOString()) : new Date().toISOString()
     };
-    if (!body.name || !body.category || !body.sku) { toast('Fill required fields','error'); return; }
+    
+    if (!body.name || !body.category || !body.sku) { toast('Name, category, and SKU are required','error'); return; }
     
     if (editId) {
         const idx = products.findIndex(x => x.id === editId);
         if (idx !== -1) {
-            products[idx] = { ...products[idx], ...body };
+            products[idx] = body;
             addActivity('Update', `${body.name} updated`);
+            toast('Product updated successfully');
         }
     } else {
+        // Check for duplicate SKU
+        if (products.some(p => p.sku === body.sku)) {
+            toast('SKU already exists!','error');
+            return;
+        }
         products.push(body);
         addActivity('Create', `${body.name} added to inventory`);
+        toast('Product created successfully');
     }
     saveProducts();
-    toast(editId ? 'Product updated' : 'Product created');
     closeModal('productModal');
-    loadData();
+    renderCurrentView();
+}
+
+function deleteProduct(pid) {
+    const p = products.find(x => x.id === pid);
+    if (!p) return;
+    if (!confirm(`Delete "${p.name}" (${p.sku})? This cannot be undone.`)) return;
+    
+    products = products.filter(x => x.id !== pid);
+    addActivity('Delete', `${p.name} (${p.sku}) removed from inventory`);
+    saveProducts();
+    toast('Product deleted');
+    renderCurrentView();
 }
 
 // =============================================
-// ACTIVITY & EXPORT
+// IMPORT / EXPORT
 // =============================================
-function clearActivities() {
-    if (!confirm('Clear all activity logs?')) return;
-    activities = [];
-    saveActivities();
-    toast('Cleared');
-    renderActivity();
+function importJSON() {
+    const fileInput = document.getElementById('importFile');
+    const file = fileInput.files[0];
+    if (!file) { toast('Please select a JSON file','error'); return; }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!Array.isArray(data)) { toast('Invalid format: expected array','error'); return; }
+            
+            let imported = 0;
+            data.forEach(item => {
+                if (item.name && item.sku && item.category && !products.some(p => p.sku === item.sku)) {
+                    products.push({
+                        ...item,
+                        id: item.id || `SKU-${String(products.length + 1).padStart(4, '0')}`,
+                        quantity: item.quantity || 0,
+                        min_stock: item.min_stock || 5,
+                        image_data: item.image_data || null,
+                        created_at: item.created_at || new Date().toISOString()
+                    });
+                    imported++;
+                }
+            });
+            
+            saveProducts();
+            addActivity('Import', `Imported ${imported} products from JSON`);
+            toast(`Imported ${imported} products`);
+            renderCurrentView();
+        } catch (err) {
+            toast('Invalid JSON file','error');
+        }
+    };
+    reader.readAsText(file);
+}
+
+function exportJSON() {
+    const blob = new Blob([JSON.stringify(products, null, 2)], {type: 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `inventory-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    toast('JSON exported');
 }
 
 function exportCSV() {
@@ -1118,17 +1255,39 @@ function exportCSV() {
     toast('CSV downloaded');
 }
 
+function exportAllCSV() {
+    if (!products.length) { toast('No products to export','error'); return; }
+    let csv = 'Name,SKU,Category,Quantity,Location,Min Stock,Description\n';
+    products.forEach(p => {
+        csv += `"${p.name}","${p.sku}","${p.category}",${p.quantity},"${p.location||''}",${p.min_stock||5},"${p.description||''}"\n`;
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = `inventory-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    toast('CSV exported');
+}
+
 // =============================================
-// UTILITIES
+// ACTIVITY & UTILITIES
 // =============================================
+function clearActivities() {
+    if (!confirm('Clear all activity logs?')) return;
+    activities = [];
+    saveActivities();
+    toast('Activity log cleared');
+    renderActivity();
+}
+
 function openModal(id) { document.getElementById(id).classList.add('show'); }
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
 function toast(msg, type) {
     const wrap = document.getElementById('toastWrap');
     const el = document.createElement('div');
-    el.className = `toast-msg ${type||'success'}`;
-    el.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':type==='warning'?'exclamation-triangle':'check-circle'}" style="margin-right:0.4rem;"></i>${msg}`;
+    el.className = `toast-msg ${type||''}`;
+    const icon = type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'check-circle';
+    el.innerHTML = `<i class="fas fa-${icon}" style="margin-right:0.4rem;"></i>${msg}`;
     wrap.appendChild(el);
     setTimeout(() => { el.style.opacity='0'; el.style.transition='0.3s'; setTimeout(()=>el.remove(),300); }, 4000);
 }
@@ -1145,13 +1304,16 @@ function doLogout() {
 // =============================================
 window.addEventListener('load', () => {
     loadData();
+    setupDragAndDrop();
 
     document.querySelectorAll('.nav-link[data-view]').forEach(n => n.addEventListener('click', () => navigate(n.dataset.view)));
-    document.querySelectorAll('.nav-link[data-page]').forEach(n => n.addEventListener('click', () => navigate(n.dataset.page)));
 
     document.getElementById('productForm').addEventListener('submit', saveProduct);
     document.getElementById('checkoutForm').addEventListener('submit', doCheckout);
     document.getElementById('restockForm').addEventListener('submit', doRestock);
+    
+    // Update restock preview when quantity changes
+    document.getElementById('rsQty').addEventListener('input', previewRestock);
 
     document.getElementById('globalSearch').addEventListener('input', function(e) {
         const q = e.target.value.toLowerCase().trim();
@@ -1176,12 +1338,14 @@ window.addEventListener('load', () => {
         if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.show').forEach(m => m.classList.remove('show'));
     });
 
-    // Check for low stock every 30 seconds
-    setInterval(() => {
-        checkLowStockAlert();
-    }, 30000);
-
     navigate('dashboard');
+    
+    // Add periodic save
+    setInterval(() => {
+        saveProducts();
+        saveCheckouts();
+        saveActivities();
+    }, 30000);
 });
 </script>
 </body>
